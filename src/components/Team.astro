@@ -1,0 +1,31 @@
+---
+import { studio } from '../config/studio';
+import { titleHtml } from '../lib/text';
+import Photo from './Photo.astro';
+
+const { eyebrow, title } = studio.sections.team;
+---
+
+{studio.coaches.length > 0 && (
+  <section class="section section--deep" aria-labelledby="equipe-titre">
+    <div class="wrap">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="title" id="equipe-titre" set:html={titleHtml(title)} />
+
+      <ul class="team">
+        {studio.coaches.map((coach) => (
+          <li>
+            <Photo
+              photo={coach.photo}
+              class="team__photo"
+              widths={[240, 360, 540]}
+              sizes="(min-width: 860px) 270px, 45vw"
+            />
+            <h3 class="team__name">{coach.firstName}</h3>
+            <p class="team__cert">{coach.certification}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

@@ -1,0 +1,44 @@
+---
+import { studio } from '../config/studio';
+import { titleHtml } from '../lib/text';
+import CtaButton from './CtaButton.astro';
+import Logo from './Logo.astro';
+import Photo from './Photo.astro';
+
+const { hero, offer } = studio;
+---
+
+<section class="hero" id="hero">
+  <Photo
+    photo={hero.photo}
+    class="hero__photo"
+    widths={[480, 800, 1200, 1600]}
+    sizes="(min-width: 860px) 40vw, 100vw"
+    priority
+  />
+
+  <div class="hero__content">
+    <Logo full class="hero__logo" />
+
+    <h1 class="display hero__title" set:html={titleHtml(hero.title)} />
+
+    <div class="hero__offer">
+      <p class="badge">
+        <span class="badge__value">-{offer.discountPercent}%</span>
+        <span class="badge__label">{offer.discountLabel}</span>
+      </p>
+      <ul class="hero__perks">
+        <li>{offer.commitment}</li>
+        {offer.perks.map((perk) => <li class="only-desktop">{perk}</li>)}
+      </ul>
+    </div>
+
+    <div class="hero__actions">
+      <CtaButton variant="dark" />
+      <p class="hero__phone">
+        <span class="hero__number">{studio.phoneDisplay}</span>
+        {studio.phoneNote && <span class="only-mobile"> · {studio.phoneNote}</span>}
+      </p>
+    </div>
+  </div>
+</section>

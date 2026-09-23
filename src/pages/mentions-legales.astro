@@ -1,0 +1,23 @@
+---
+import Landing from '../layouts/Landing.astro';
+import Footer from '../components/Footer.astro';
+import { studio } from '../config/studio';
+---
+
+<Landing title={`Mentions légales — ${studio.name}`} description="Mentions légales" noindex>
+  <main class="section">
+    <div class="wrap prose">
+      <h1 class="title">Mentions légales</h1>
+      <p>
+        Éditeur : {studio.legalName}, {studio.address}.
+        Téléphone : {studio.phoneDisplay}. Courriel : {studio.email}.
+      </p>
+      <p class="muted">
+        À compléter avant mise en ligne : forme juridique, capital, RCS, numéro de TVA,
+        directeur de la publication, hébergeur et ses coordonnées.
+      </p>
+      <p><a href="/">Retour à la page</a></p>
+    </div>
+  </main>
+  <Footer />
+</Landing>

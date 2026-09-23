@@ -1,0 +1,70 @@
+---
+import { brand } from '../config/brand';
+import { studio } from '../config/studio';
+import '../styles/fonts.css';
+import '../styles/global.css';
+import ConsentBanner from '../components/ConsentBanner.astro';
+import MetaPixel from '../components/MetaPixel.astro';
+
+interface Props { title: string; description: string; noindex?: boolean }
+const { title, description, noindex = false } = Astro.props;
+
+const { colors, fonts } = brand;
+const rootVars = `:root{
+  --c-bg:${colors.bg};
+  --c-surface:${colors.surface};
+  --c-ink:${colors.ink};
+  --c-muted:${colors.muted};
+  --c-accent:${colors.accent};
+  --c-accent-ink:${colors.accentInk};
+  --c-accent-soft:${colors.accentSoft};
+  --c-peach:${colors.peach};
+  --c-deep:${colors.deep};
+  --c-deep-ink:${colors.deepInk};
+  --c-border:${colors.border};
+  --f-heading:${fonts.heading};
+  --f-body:${fonts.body};
+  --f-accent-serif:${fonts.accentSerif};
+  --radius:${brand.radius};
+  --max-w:${brand.maxWidth};
+}`;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={studio.name} />
+    {studio.siteUrl && <link rel="canonical" href={new URL(Astro.url.pathname, studio.siteUrl).href} />}
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/jost-variable.woff2" />
+    <style is:global set:html={rootVars}></style>
+    <MetaPixel />
+  </head>
+  <body>
+    <slot />
+    <ConsentBanner />
+
+    <script>
+      // Capture des identifiants de campagne à l'arrivée.
+      // Aucune donnée personnelle : uniquement des identifiants techniques.
+      const KEYS = ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      try {
+        const params = new URLSearchParams(window.location.search);
+        for (const key of KEYS) {
+          const value = params.get(key);
+          if (value && !sessionStorage.getItem(key)) sessionStorage.setItem(key, value);
+        }
+      } catch {
+        // sessionStorage indisponible (navigation privée stricte) : on continue sans.
+      }
+    </script>
+  </body>
+</html>

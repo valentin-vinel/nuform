@@ -1,0 +1,53 @@
+---
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { studio } from '../config/studio';
+
+/**
+ * Le fichier du logo sert de masque : sa forme est gardée, sa couleur vient du
+ * texte autour (currentColor). Un seul fichier, lisible sur le voile sombre du
+ * hero mobile comme sur les fonds clairs. SVG ou PNG transparent.
+ */
+interface Props {
+  /** Le hero affiche la signature et, sans logo, le rappel de remplacement. */
+  full?: boolean;
+  class?: string;
+}
+
+const { full = false, class: className } = Astro.props;
+
+const files = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/studio/*.{svg,png,webp,avif}',
+  { eager: true },
+);
+
+let logo: { url: string; ratio: string } | undefined;
+if (studio.logo) {
+  const src = files[`../assets/studio/${studio.logo}`]?.default;
+  if (!src) {
+    throw new Error(
+      `Logo introuvable : src/assets/studio/${studio.logo} (formats acceptés : svg, png, webp, avif).`,
+    );
+  }
+  const image =
+    src.format === 'svg' ? await getImage({ src }) : await getImage({ src, width: 480, format: 'webp' });
+  logo = { url: image.src, ratio: `${src.width} / ${src.height}` };
+}
+---
+
+<div class:list={['logo', className]}>
+  {
+    logo ? (
+      <span
+        class="logo__img"
+        role="img"
+        aria-label={studio.name}
+        style={`--logo: url(${logo.url}); aspect-ratio: ${logo.ratio}`}
+      />
+    ) : (
+      <span class="logo__name">{studio.name}</span>
+    )
+  }
+  {full && studio.tagline && <span class="logo__tagline">{studio.tagline}</span>}
+  {full && !logo && <span class="logo__todo">[ Remplacer par le logo ]</span>}
+</div>

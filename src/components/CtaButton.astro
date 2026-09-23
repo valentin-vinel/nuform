@@ -1,0 +1,18 @@
+---
+import { studio } from '../config/studio';
+
+/**
+ * Le seul appel à l'action de la page : même libellé partout, même cible.
+ * Le clic sur le lien tel: déclenche l'événement Contact, une fois par session (MetaPixel.astro).
+ */
+interface Props {
+  variant?: 'accent' | 'dark' | 'light';
+  class?: string;
+}
+
+const { variant = 'accent', class: className } = Astro.props;
+---
+
+<a class:list={['btn', `btn--${variant}`, className]} href={`tel:${studio.phone}`} data-cta>
+  {studio.cta.label}<span class="sr-only"> au {studio.phoneDisplay}</span>
+</a>

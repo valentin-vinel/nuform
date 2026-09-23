@@ -1,0 +1,67 @@
+---
+import { studio } from '../config/studio';
+import { fill, titleHtml } from '../lib/text';
+import CtaButton from './CtaButton.astro';
+
+const { offer } = studio;
+const { eyebrow, title } = studio.sections.offer;
+
+// Même gabarit que le bloc final : vide tant que offer.endDate est null.
+const validity = fill(studio.sections.final.validity);
+---
+
+<section class="section pricing" aria-labelledby="offre-titre">
+  <div class="wrap">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 class="title" id="offre-titre" set:html={titleHtml(title)} />
+
+    <div class="pricing__cats">
+      {offer.categories.map((category) => (
+        <section class="card cat" aria-labelledby={`cat-${category.id}`}>
+          <header class="cat__head">
+            <h3 class="cat__name" id={`cat-${category.id}`}>{category.name}</h3>
+            {category.intro && <p class="cat__intro">{category.intro}</p>}
+          </header>
+
+          <ul class="cat__list">
+            {category.plans.map((plan) => (
+              <li class:list={['plan', plan.featured && 'plan--featured']}>
+                <div class="plan__left">
+                  {plan.featured && <p class="plan__flag">{offer.featuredLabel}</p>}
+                  <p class="plan__name">{plan.name}</p>
+                  {plan.frequency && <p class="plan__freq">{plan.frequency}</p>}
+                </div>
+
+                <div class="plan__right">
+                  {plan.priceBefore && (
+                    <p class="plan__before">
+                      <s><span class="sr-only">Prix habituel </span>{plan.priceBefore}&nbsp;€ {offer.priceUnit.short}</s>
+                    </p>
+                  )}
+                  <p class="plan__price">
+                    {plan.priceBefore && <span class="sr-only">, remisé à </span>}
+                    <span class="plan__now">{plan.price}&nbsp;€</span>
+                    <span class="plan__unit">{offer.priceUnit.short}</span>
+                  </p>
+                  {plan.pricePerSession && (
+                    <p class="plan__meta">
+                      {offer.perSessionLabel.replace('{price}', plan.pricePerSession)}
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+
+    <div class="pricing__foot">
+      <p class="pricing__conditions">
+        {offer.conditions.map(fill).join(' ')}
+        {validity && ` ${validity}.`}
+      </p>
+      <CtaButton />
+    </div>
+  </div>
+</section>

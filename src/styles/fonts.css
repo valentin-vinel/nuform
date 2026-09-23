@@ -1,0 +1,30 @@
+/*
+ * EMPLACEMENT 5 / 5 — Polices, servies en local depuis public/fonts/.
+ * Sous-ensemble latin (français compris). Licences OFL à côté des fichiers.
+ */
+
+@font-face {
+  font-family: 'Jost';
+  src: url('/fonts/jost-variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Romain : utilisé seulement par le logo texte provisoire. Jamais téléchargé
+   une fois le logo SVG en place. */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

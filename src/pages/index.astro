@@ -1,17 +1,36 @@
 ---
+import Landing from '../layouts/Landing.astro';
+import { studio } from '../config/studio';
+import Hero from '../components/Hero.astro';
+import Reassurance from '../components/Reassurance.astro';
+import Pricing from '../components/Pricing.astro';
+import StudioSection from '../components/StudioSection.astro';
+import Reviews from '../components/Reviews.astro';
+import Team from '../components/Team.astro';
+import FinalCta from '../components/FinalCta.astro';
+import Footer from '../components/Footer.astro';
+import StickyCta from '../components/StickyCta.astro';
+import { offerEnd } from '../lib/text';
 
+// Garde-fous de build : rien n'arrête la construction, tout se voit dans la console.
+if (offerEnd && offerEnd.getTime() < Date.now()) {
+  console.warn(`\n⚠  Offre expirée depuis le ${studio.offer.endDate} : mettre à jour offer.endDate.\n`);
+}
+if (studio.reviews.some((review) => review.placeholder)) {
+  console.warn('\n⚠  Des avis d’exemple (placeholder: true) sont encore affichés.\n');
+}
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Landing title={studio.meta.title} description={studio.meta.description}>
+  <main>
+    <Hero />
+    <Reassurance />
+    <Pricing />
+    <StudioSection />
+    <Reviews />
+    <!-- <Team /> -->
+    <FinalCta />
+  </main>
+  <Footer />
+  <StickyCta />
+</Landing>

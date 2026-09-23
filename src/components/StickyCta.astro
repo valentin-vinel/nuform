@@ -1,0 +1,40 @@
+---
+import { studio } from '../config/studio';
+import CtaButton from './CtaButton.astro';
+
+/**
+ * Appel à l'action fixe. Mobile : barre pleine largeur. Ordinateur : bulle en
+ * bas à droite, qui déplie le libellé et le numéro au survol ou au focus.
+ * Même lien tel:, même libellé, même événement Contact que les autres boutons.
+ */
+---
+
+<div class="mobilebar" data-sticky data-visible="false">
+  <CtaButton class="mobilebar__btn" />
+</div>
+
+<a class="bubble" data-sticky data-visible="false" href={`tel:${studio.phone}`} data-cta>
+  <span class="bubble__label">
+    {studio.cta.label}<span class="sr-only"> au</span>
+    <span class="bubble__number">{studio.phoneDisplay}</span>
+  </span>
+  <svg class="bubble__icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+    <path
+      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"
+    />
+  </svg>
+</a>
+
+<script>
+  // Masqués tant que le hero est à l'écran (son bouton suffit), puis affichés
+  // jusqu'en bas de la page.
+  const stickies = document.querySelectorAll<HTMLElement>('[data-sticky]');
+  const hero = document.getElementById('hero');
+
+  if (stickies.length && hero) {
+    new IntersectionObserver(([entry]) => {
+      const visible = String(!entry.isIntersecting);
+      stickies.forEach((el) => (el.dataset.visible = visible));
+    }).observe(hero);
+  }
+</script>

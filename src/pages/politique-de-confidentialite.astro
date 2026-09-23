@@ -1,0 +1,41 @@
+---
+import Landing from '../layouts/Landing.astro';
+import Footer from '../components/Footer.astro';
+import { studio } from '../config/studio';
+---
+
+<Landing
+  title={`Politique de confidentialité — ${studio.name}`}
+  description="Politique de confidentialité"
+  noindex
+>
+  <main class="section">
+    <div class="wrap prose">
+      <h1 class="title">Politique de confidentialité</h1>
+
+      <h2>Mesure d'audience publicitaire</h2>
+      <p>
+        Avec votre consentement, un cookie de mesure déposé par Meta permet de savoir
+        quelles campagnes publicitaires amènent des appels au studio. Vous pouvez refuser
+        ce dépôt, et revenir sur votre choix à tout moment en effaçant les données du
+        site dans votre navigateur.
+      </p>
+
+      <h2>Données collectées</h2>
+      <p>
+        Cette page ne contient aucun formulaire. Les seules données conservées dans votre
+        navigateur, le temps de la visite, sont les identifiants techniques de la campagne
+        publicitaire qui vous a amené ici.
+      </p>
+
+      <p class="muted">
+        À compléter avant mise en ligne : identité du responsable de traitement
+        ({studio.legalName}), base légale, durées de conservation, sous-traitants,
+        transferts hors UE, modalités d'exercice des droits, coordonnées du DPO le cas
+        échéant.
+      </p>
+      <p><a href="/">Retour à la page</a></p>
+    </div>
+  </main>
+  <Footer />
+</Landing>

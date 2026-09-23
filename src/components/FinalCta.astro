@@ -1,0 +1,46 @@
+---
+import { studio } from '../config/studio';
+import { fill, titleHtml } from '../lib/text';
+import CtaButton from './CtaButton.astro';
+import Photo from './Photo.astro';
+
+const { title, text, validity, storefront, photos } = studio.sections.final;
+const validityText = fill(validity);
+---
+
+<section class="final" id="appel" aria-labelledby="appel-titre">
+  <div class="wrap final__inner">
+    <div>
+      <h2 class="display final__title" id="appel-titre" set:html={titleHtml(title)} />
+      <p class="final__text">
+        {text} {validityText && <span class="only-desktop">{validityText}.</span>}
+      </p>
+    </div>
+    <div class="final__action">
+      <CtaButton variant="light" />
+      <p class="final__phone">{studio.phoneDisplay}</p>
+      {validityText && <p class="final__validity only-mobile">{validityText}</p>}
+    </div>
+  </div>
+
+  {(storefront || photos.length > 0) && (
+    <div class="wrap final__visit">
+      {storefront && (
+        <Photo
+          photo={storefront}
+          class="final__storefront"
+          widths={[400, 640, 960, 1200]}
+          sizes="(min-width: 860px) 565px, calc(100vw - 2.5rem)"
+        />
+      )}
+      {photos.map((photo) => (
+        <Photo
+          photo={photo}
+          class="final__square"
+          widths={[240, 400, 600]}
+          sizes="(min-width: 860px) 275px, calc(50vw - 1.5rem)"
+        />
+      ))}
+    </div>
+  )}
+</section>

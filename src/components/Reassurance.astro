@@ -1,0 +1,18 @@
+---
+import { studio } from '../config/studio';
+
+// Sur mobile, les avantages de l'offre (affichés dans le hero sur ordinateur)
+// passent ici, suivis des éléments marqués `mobile`.
+const items = [
+  ...studio.offer.perks.map((text) => ({ text, class: 'only-mobile' })),
+  ...studio.reassurance.map((item) => ({ text: item.text, class: item.mobile ? '' : 'only-desktop' })),
+];
+---
+
+{items.length > 0 && (
+  <section class="band" aria-label="En bref">
+    <ul class="wrap band__list">
+      {items.map((item) => <li class={item.class || undefined}>{item.text}</li>)}
+    </ul>
+  </section>
+)}

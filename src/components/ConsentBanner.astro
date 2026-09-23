@@ -1,0 +1,38 @@
+---
+// Bandeau conforme aux recommandations de la CNIL : refuser reste aussi
+// simple qu'accepter. Accepter est plein, Refuser en contour, même taille,
+// même libellé en capitales, un seul clic chacun.
+---
+
+<div class="consent" id="consent" hidden role="dialog" aria-live="polite" aria-label="Gestion des cookies">
+  <p>
+    Nous utilisons un cookie de mesure d'audience publicitaire pour savoir quelles
+    campagnes amènent des appels. Vous pouvez refuser sans conséquence sur votre
+    navigation. <a href="/politique-de-confidentialite/">En savoir plus</a>
+  </p>
+  <div class="consent__actions">
+    <button type="button" class="btn btn--dark" id="consent-accept">Accepter</button>
+    <button type="button" class="btn btn--outline" id="consent-refuse">Refuser</button>
+  </div>
+</div>
+
+<script>
+  const KEY = 'consent-ads';
+  const banner = document.getElementById('consent');
+  const load = () => (window as any).__loadPixel?.();
+
+  function decide(value: 'granted' | 'denied') {
+    try { localStorage.setItem(KEY, value); } catch {}
+    if (banner) banner.hidden = true;
+    if (value === 'granted') load();
+  }
+
+  let stored: string | null = null;
+  try { stored = localStorage.getItem(KEY); } catch {}
+
+  if (stored === 'granted') load();
+  else if (stored !== 'denied' && banner) banner.hidden = false;
+
+  document.getElementById('consent-accept')?.addEventListener('click', () => decide('granted'));
+  document.getElementById('consent-refuse')?.addEventListener('click', () => decide('denied'));
+</script>

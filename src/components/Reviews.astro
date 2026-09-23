@@ -1,0 +1,71 @@
+---
+import { studio } from '../config/studio';
+import { titleHtml } from '../lib/text';
+
+const { eyebrow, title } = studio.sections.reviews;
+const { reviews, googleReview } = studio;
+
+const google = googleReview && {
+  rating: googleReview.rating?.toLocaleString('fr-FR') ?? '[ Note ]',
+  count: googleReview.count ?? '[ N ]',
+};
+
+// Bandeau en boucle : une séquence d'au moins 6 cartes (plus large que les
+// grands écrans), posée deux fois, puis décalée de -50 %. Seul le premier
+// passage des avis est lu par les lecteurs d'écran ; les copies sont masquées.
+const MIN_CARDS = 6;
+const repeat = Math.max(1, Math.ceil(MIN_CARDS / reviews.length));
+const sequence = Array.from({ length: repeat }, () => reviews).flat();
+const loop = [...sequence, ...sequence];
+// Environ 9 s par carte : une vitesse de lecture, pas un défilé.
+const duration = `${sequence.length * 9}s`;
+---
+
+{reviews.length > 0 && (
+  <section class="section" aria-labelledby="avis-titre">
+    <div class="wrap">
+      <p class="eyebrow">{eyebrow}</p>
+      <div class="reviews__head">
+        <h2 class="title" id="avis-titre" set:html={titleHtml(title)} />
+        {google && <p class="reviews__google">{google.rating} / 5 sur Google · {google.count} avis</p>}
+      </div>
+    </div>
+
+    <div class="marquee" id="reviews-marquee" style={`--duration: ${duration}`}>
+      <ul class="marquee__track" aria-label="Avis clients">
+        {loop.map((review, i) => {
+          const copy = i >= reviews.length;
+          return (
+            <li class="card review" aria-hidden={copy ? 'true' : undefined} inert={copy}>
+              {review.placeholder && <p class="review__placeholder">Avis d'exemple — à remplacer</p>}
+              <p class="review__stars" role="img" aria-label={`${review.rating} étoiles sur 5`}>
+                {'★'.repeat(review.rating)}
+              </p>
+              <blockquote class="review__text"><p>{review.text}</p></blockquote>
+              <p class="review__meta">{review.author} · {review.source} · {review.date}</p>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+
+    <div class="wrap marquee__controls">
+      <button type="button" class="marquee__toggle" id="reviews-toggle" aria-pressed="false">
+        Mettre en pause
+      </button>
+    </div>
+  </section>
+)}
+
+<script>
+  // Bouton pause : tout contenu qui défile seul plus de 5 s doit pouvoir être arrêté.
+  const marquee = document.getElementById('reviews-marquee');
+  const toggle = document.getElementById('reviews-toggle');
+
+  toggle?.addEventListener('click', () => {
+    const paused = toggle.getAttribute('aria-pressed') !== 'true';
+    toggle.setAttribute('aria-pressed', String(paused));
+    toggle.textContent = paused ? 'Reprendre le défilement' : 'Mettre en pause';
+    marquee?.toggleAttribute('data-paused', paused);
+  });
+</script>

@@ -1,0 +1,65 @@
+---
+// Le pixel n'est chargé qu'après consentement explicite.
+// Voir ConsentBanner.astro, qui appelle window.__loadPixel().
+const pixelId = import.meta.env.PUBLIC_PIXEL_ID;
+
+if (!pixelId) {
+  console.warn(
+    '\n⚠  PUBLIC_PIXEL_ID absent : la page est construite SANS pixel Meta.' +
+      '\n   Copier .env.example en .env et renseigner l’identifiant du pixel du studio.\n',
+  );
+}
+---
+
+{pixelId && (
+  <script is:inline define:vars={{ pixelId }}>
+    window.__pixelLoaded = false;
+
+    window.__loadPixel = function () {
+      if (window.__pixelLoaded) return;
+      window.__pixelLoaded = true;
+
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+      window.fbq('init', pixelId);
+      window.fbq('track', 'PageView');
+    };
+
+    // Événement Contact : une seule fois par session, au premier clic sur un
+    // lien tel:. Un clic n'est pas un appel décroché, ce n'est pas une conversion.
+    // L'eventID est conservé pour la déduplication avec la CAPI.
+    window.__trackContact = function () {
+      try {
+        if (sessionStorage.getItem('contactFired') === '1') return;
+        const eventId =
+          sessionStorage.getItem('contactEventId') ||
+          (crypto.randomUUID && crypto.randomUUID()) ||
+          String(Date.now()) + Math.random();
+        sessionStorage.setItem('contactFired', '1');
+        sessionStorage.setItem('contactEventId', eventId);
+        if (window.fbq) window.fbq('track', 'Contact', {}, { eventID: eventId });
+      } catch {
+        // storage indisponible : on ne déclenche pas, plutôt que de compter en double.
+      }
+    };
+
+    document.addEventListener('click', function (event) {
+      if (event.target.closest('a[href^="tel:"]')) window.__trackContact();
+    });
+  </script>
+)}
