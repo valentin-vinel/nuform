@@ -28,18 +28,6 @@ export interface PhotoSlot {
   alt: string;
 }
 
-// export interface Plan {
-//   name: string;
-//   /** Prix mensuel remisé, sans le symbole €. */
-//   price: string;
-//   /** Prix mensuel avant remise, sans le symbole €. */
-//   priceBefore: string;
-//   /** Nombre de séances par semaine, ce qui est inclus. */
-//   details: string;
-//   /** Formule mise en avant. Seulement si c'est vrai. */
-//   featured?: boolean;
-// }
-
 export interface Plan {
   id: string;
   /** Intitulé du palier, ex. « 4 séances » ou « Illimité ». */
@@ -95,6 +83,26 @@ export interface Studio {
   /** Raison sociale, pour les mentions légales. */
   legalName: string;
   email: string;
+  /**
+   * Mentions légales (loi LCEN, art. 6) et politique de confidentialité.
+   * Les valeurs entre crochets s'affichent telles quelles : tout remplir avant
+   * la mise en ligne. La plupart figurent sur l'extrait Kbis.
+   */
+  legal: {
+    /** SAS, SARL, EURL, entreprise individuelle… */
+    form: string;
+    /** Capital social, ex. « 1 000 € ». Vide pour une entreprise individuelle. */
+    capital: string;
+    /** Siège social, s'il diffère de `address`. Vide sinon. */
+    headOffice: string;
+    /** Ex. « RCS Le Mans 123 456 789 ». */
+    registration: string;
+    /** Numéro de TVA intracommunautaire, ou mention d'exonération. */
+    vat: string;
+    /** Prénom, nom et fonction, ex. « Jeanne Martin, gérante ». */
+    publicationDirector: string;
+    host: { name: string; address: string; phone: string };
+  };
 
   /** Format international, pour le lien tel: (ex. +33612345678). */
   phone: string;
@@ -113,21 +121,6 @@ export interface Studio {
     title: string;
     photo: PhotoSlot;
   };
-
-  // offer: {
-  //   discountPercent: number;
-  //   /** Sous le pourcentage dans le hero. */
-  //   discountLabel: string;
-  //   commitment: string;
-  //   /** Avantages : dans le hero sur ordinateur, dans le bandeau sur mobile. */
-  //   perks: string[];
-  //   /** Date de fin réelle, AAAA-MM-JJ (JJ/MM/AAAA accepté). null : aucune date affichée. */
-  //   endDate: string | null;
-  //   plans: Plan[];
-  //   featuredLabel: string;
-  //   priceUnit: { short: string; long: string };
-  //   conditions: string[];
-  // };
 
   offer: {
     discountPercent: number;
@@ -180,6 +173,7 @@ export interface Studio {
   /** Note relevée sur la fiche Google. null pour masquer. Jamais recopiée de mémoire. */
   googleReview: { rating: number | null; count: number | null } | null;
 
+  /** Vide : la section équipe n'est pas affichée. */
   coaches: Coach[];
 }
 
@@ -191,11 +185,24 @@ export const studio: Studio = {
   address: '11 place Aristide Briand, 72000 Le Mans',
   legalName: '[ Raison sociale ]',
   email: '[ contact@… ]',
+  legal: {
+    form: '[ Forme juridique ]',
+    capital: '[ Capital social ]',
+    headOffice: '',
+    registration: '[ RCS Le Mans + SIREN ]',
+    vat: '[ N° de TVA intracommunautaire ]',
+    publicationDirector: '[ Prénom Nom, fonction ]',
+    host: {
+      name: '[ Hébergeur ]',
+      address: '[ Adresse de l’hébergeur ]',
+      phone: '[ Téléphone de l’hébergeur ]',
+    },
+  },
 
   phone: '+33243208733',
   phoneDisplay: '02 43 20 87 33',
   // À retirer si le studio ne décroche pas systématiquement.
-  phoneNote: 'réponse immédiate',
+  phoneNote: '',
 
   cta: { label: 'Appeler le studio' },
 
@@ -212,43 +219,6 @@ export const studio: Studio = {
       alt: 'Photo hero',
     },
   },
-
-  // offer: {
-  //   discountPercent: 15,
-  //   discountLabel: 'sur tous nos abonnements',
-  //   commitment: 'Engagement sur 12 mois',
-  //   perks: ['Welcome bag offert', 'Sans frais d’inscription'],
-  //   endDate: "30/09/2026",
-  //   plans: [
-  //     {
-  //       name: 'Reformer - Nü Sculpt',
-  //       price: '[ PRIX ]',
-  //       priceBefore: '[ PRIX ]',
-  //       details: '[ Nombre de séances par semaine, ce qui est inclus ]',
-  //     },
-  //     {
-  //       name: '[ Formule 2 ]',
-  //       price: '[ PRIX ]',
-  //       priceBefore: '[ PRIX ]',
-  //       details: '[ Nombre de séances par semaine, ce qui est inclus ]',
-  //       // À confirmer avec le studio : retirer si ce n'est pas la formule la plus choisie.
-  //       // featured: true,
-  //     },
-  //     {
-  //       name: '[ Formule 3 ]',
-  //       price: '[ PRIX ]',
-  //       priceBefore: '[ PRIX ]',
-  //       details: '[ Nombre de séances par semaine, ce qui est inclus ]',
-  //     },
-  //   ],
-  //   featuredLabel: 'Le plus choisi',
-  //   priceUnit: { short: '/ mois', long: 'par mois, 12 mois' },
-  //   conditions: [
-  //     'Remise valable sur un engagement de 12 mois((, jusqu’au {date})).',
-  //     'Welcome bag offert à la signature.',
-  //     '[ Autres conditions ].',
-  //   ],
-  // },
 
   offer: {
     discountPercent: 15,
@@ -366,13 +336,36 @@ export const studio: Studio = {
       date: 'Avril 2026',
       rating: 5,
     },
+    {
+      text: "J'ai testé ce super endroit avec ma copine, et on a adoré 😊. L'accueil était vraiment chaleureux. L'espace est lumineux, les boissons sont délicieuses, et j'ai redécouvert mon amour pour le matcha.  J'ai déjà hâte d'y retourner pour prolonger l'expérience Nü Form 🧡",
+      author: 'Anais',
+      source: 'Google',
+      date: 'Avril 2026',
+      rating: 5,
+    },
+    {
+      text: "Une découverte fantastique ! Les cours de Nu Form sont d'une qualité exceptionnelle, et Inès est une coach attentive et professionnelle qui prodigue d'excellents conseils. L'ambiance et l'accueil sont formidables, et le concept Pilates + café est tout simplement génial. J'ai particulièrement adoré le Pink Matcha en fin de séance 😍 Je recommande vivement !",
+      author: 'Anissa',
+      source: 'Google',
+      date: 'Mai 2026',
+      rating: 5,
+    },
+    {
+      text: "Le studio de Pilates est impeccable et incroyablement bien équipé. Les boissons sont tout simplement délicieuses et, surtout, saines. Le personnel est charmant et attentionné. Si vous souhaitez passer un moment agréable et paisible, vous pouvez être sûr que cet endroit deviendra votre nouveau lieu de prédilection 😝",
+      author: 'Romane',
+      source: 'Google',
+      date: 'Août 2026',
+      rating: 5,
+    },
   ],
 
   googleReview: { rating: 4.9, count: 98 },
 
-  coaches: [1, 2, 3, 4].map((n) => ({
-    firstName: '[ Prénom ]',
-    certification: '[ Certification ]',
-    photo: { file: null, subject: `Portrait coach ${n}`, alt: '' },
-  })),
+  // Section masquée tant que la liste est vide. Une entrée par coach :
+  // {
+  //   firstName: 'Johanna',
+  //   certification: 'Certifiée Pilates reformer',
+  //   photo: { file: 'coach-johanna.jpg', subject: 'Portrait', alt: 'Johanna, coach, dans la salle de reformers' },
+  // },
+  coaches: [],
 };

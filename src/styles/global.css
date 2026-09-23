@@ -846,6 +846,17 @@ html:has(.lightbox[open]) { overflow: hidden; }
 .footer__links { color: var(--c-muted); font-size: 0.75rem; }
 .footer__links a { color: var(--c-accent); }
 
+/* Vrai bouton (c'est une action), habillé comme les liens voisins. */
+.footer__cookies {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 @media (min-width: 860px) {
   .footer__inner {
     display: flex;
@@ -982,4 +993,7 @@ html:has(.lightbox[open]) { overflow: hidden; }
 .prose { display: grid; gap: 1rem; max-width: 46rem; }
 .prose .title { margin-inline: 0; text-align: left; }
 .prose h2 { margin-top: 1rem; font-size: 1.125rem; font-weight: 600; }
-.prose a { color: var(--c-accent); }
+.prose a:not(.btn) { color: var(--c-accent); }
+.prose__list { display: grid; gap: 0.5rem; padding-left: 1.25rem; list-style: disc; }
+.prose code { font-size: 0.9em; }
+.prose__back { justify-self: start; min-height: 2.75rem; padding: 0.6rem 1.1rem; font-size: 0.75rem; }

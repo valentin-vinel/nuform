@@ -2,13 +2,16 @@
 // Bandeau conforme aux recommandations de la CNIL : refuser reste aussi
 // simple qu'accepter. Accepter est plein, Refuser en contour, même taille,
 // même libellé en capitales, un seul clic chacun.
+// Le choix se modifie à tout moment via « Gérer les cookies » (pied de page)
+// et expire au bout de 6 mois : le bandeau est alors de nouveau proposé.
 ---
 
 <div class="consent" id="consent" hidden role="dialog" aria-live="polite" aria-label="Gestion des cookies">
   <p>
     Nous utilisons un cookie de mesure d'audience publicitaire pour savoir quelles
     campagnes amènent des appels. Vous pouvez refuser sans conséquence sur votre
-    navigation. <a href="/politique-de-confidentialite/">En savoir plus</a>
+    navigation, et changer d'avis à tout moment via «&nbsp;Gérer les cookies&nbsp;» en bas de page.
+    <a href="/politique-de-confidentialite/">En savoir plus</a>
   </p>
   <div class="consent__actions">
     <button type="button" class="btn btn--dark" id="consent-accept">Accepter</button>
@@ -18,21 +21,64 @@
 
 <script>
   const KEY = 'consent-ads';
-  const banner = document.getElementById('consent');
-  const load = () => (window as any).__loadPixel?.();
+  // Durée de validité du choix recommandée par la CNIL : 6 mois.
+  const MAX_AGE_MS = 182 * 24 * 60 * 60 * 1000;
 
-  function decide(value: 'granted' | 'denied') {
-    try { localStorage.setItem(KEY, value); } catch {}
-    if (banner) banner.hidden = true;
-    if (value === 'granted') load();
+  type Choice = { value: 'granted' | 'denied'; at: number };
+
+  const banner = document.getElementById('consent');
+  const acceptButton = document.getElementById('consent-accept');
+  const w = window as any;
+
+  function read(): Choice | null {
+    try {
+      const choice = JSON.parse(localStorage.getItem(KEY) || 'null');
+      const valid =
+        (choice?.value === 'granted' || choice?.value === 'denied') &&
+        Date.now() - choice.at < MAX_AGE_MS;
+      return valid ? choice : null;
+    } catch {
+      // Ancien format ou stockage indisponible : on redemande.
+      return null;
+    }
   }
 
-  let stored: string | null = null;
-  try { stored = localStorage.getItem(KEY); } catch {}
+  // Cookies _fbp et _fbc posés par le pixel sur le domaine du site.
+  function clearMetaCookies() {
+    const host = location.hostname;
+    const domains = ['', host, '.' + host.split('.').slice(-2).join('.')];
+    for (const name of ['_fbp', '_fbc']) {
+      for (const domain of domains) {
+        document.cookie = `${name}=; Max-Age=0; path=/${domain ? `; domain=${domain}` : ''}`;
+      }
+    }
+  }
 
-  if (stored === 'granted') load();
-  else if (stored !== 'denied' && banner) banner.hidden = false;
+  function decide(value: Choice['value']) {
+    try { localStorage.setItem(KEY, JSON.stringify({ value, at: Date.now() })); } catch {}
+    if (banner) banner.hidden = true;
 
-  document.getElementById('consent-accept')?.addEventListener('click', () => decide('granted'));
+    if (value === 'granted') {
+      w.__loadPixel?.();
+    } else {
+      clearMetaCookies();
+      // Pixel déjà chargé dans cette page (retrait du consentement) : on recharge
+      // pour qu'il ne tourne plus.
+      if (w.__pixelLoaded) location.reload();
+    }
+  }
+
+  const stored = read();
+  if (stored?.value === 'granted') w.__loadPixel?.();
+  else if (!stored && banner) banner.hidden = false;
+
+  acceptButton?.addEventListener('click', () => decide('granted'));
   document.getElementById('consent-refuse')?.addEventListener('click', () => decide('denied'));
+
+  // « Gérer les cookies » : rouvre le bandeau, focus sur le premier bouton.
+  document.addEventListener('click', (event) => {
+    if (!(event.target as HTMLElement).closest('[data-consent-open]') || !banner) return;
+    banner.hidden = false;
+    acceptButton?.focus();
+  });
 </script>

@@ -2,21 +2,47 @@
 import Landing from '../layouts/Landing.astro';
 import Footer from '../components/Footer.astro';
 import { studio } from '../config/studio';
+
+const { legal } = studio;
 ---
 
 <Landing title={`Mentions légales — ${studio.name}`} description="Mentions légales" noindex>
   <main class="section">
     <div class="wrap prose">
+      <a class="btn btn--dark prose__back" href="/">← Retour à l'offre</a>
       <h1 class="title">Mentions légales</h1>
+
+      <h2>Éditeur du site</h2>
       <p>
-        Éditeur : {studio.legalName}, {studio.address}.
+        {studio.legalName}, {legal.form}{legal.capital && ` au capital de ${legal.capital}`}.<br />
+        Siège social : {legal.headOffice || studio.address}.<br />
+        {legal.registration}. TVA intracommunautaire : {legal.vat}.<br />
         Téléphone : {studio.phoneDisplay}. Courriel : {studio.email}.
       </p>
-      <p class="muted">
-        À compléter avant mise en ligne : forme juridique, capital, RCS, numéro de TVA,
-        directeur de la publication, hébergeur et ses coordonnées.
+
+      <h2>Directeur de la publication</h2>
+      <p>{legal.publicationDirector}.</p>
+
+      <h2>Hébergement</h2>
+      <p>
+        {legal.host.name}, {legal.host.address}.<br />
+        Téléphone : {legal.host.phone}.
       </p>
-      <p><a href="/">Retour à la page</a></p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>
+        Les textes, photographies, logo et éléments graphiques de ce site sont la propriété
+        de {studio.legalName} ou utilisés avec l'autorisation de leurs auteurs. Toute
+        reproduction sans autorisation écrite préalable est interdite.
+      </p>
+
+      <h2>Données personnelles</h2>
+      <p>
+        Le traitement des données et l'usage des cookies sont décrits dans la{' '}
+        <a href="/politique-de-confidentialite/">politique de confidentialité</a>.
+      </p>
+
+      <p><a class="btn btn--dark prose__back" href="/">← Retour à l'offre</a></p>
     </div>
   </main>
   <Footer />

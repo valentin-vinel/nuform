@@ -2,6 +2,8 @@
 import Landing from '../layouts/Landing.astro';
 import Footer from '../components/Footer.astro';
 import { studio } from '../config/studio';
+
+const { legal } = studio;
 ---
 
 <Landing
@@ -11,30 +13,68 @@ import { studio } from '../config/studio';
 >
   <main class="section">
     <div class="wrap prose">
+      <p><a class="btn btn--dark prose__back" href="/">← Retour à l'offre</a></p>
+    
       <h1 class="title">Politique de confidentialité</h1>
 
-      <h2>Mesure d'audience publicitaire</h2>
+      <h2>Responsable du traitement</h2>
       <p>
-        Avec votre consentement, un cookie de mesure déposé par Meta permet de savoir
-        quelles campagnes publicitaires amènent des appels au studio. Vous pouvez refuser
-        ce dépôt, et revenir sur votre choix à tout moment en effaçant les données du
-        site dans votre navigateur.
+        {studio.legalName}, {legal.headOffice || studio.address}. Courriel : {studio.email}.
       </p>
 
-      <h2>Données collectées</h2>
+      <h2>Ce que cette page collecte</h2>
       <p>
-        Cette page ne contient aucun formulaire. Les seules données conservées dans votre
-        navigateur, le temps de la visite, sont les identifiants techniques de la campagne
-        publicitaire qui vous a amené ici.
+        Cette page ne contient aucun formulaire et ne vous demande aucune information.
+        Les appels passés au studio depuis le bouton «&nbsp;{studio.cta.label}&nbsp;» passent par votre
+        téléphone : la page n'enregistre ni votre numéro ni le contenu de l'appel.
       </p>
 
-      <p class="muted">
-        À compléter avant mise en ligne : identité du responsable de traitement
-        ({studio.legalName}), base légale, durées de conservation, sous-traitants,
-        transferts hors UE, modalités d'exercice des droits, coordonnées du DPO le cas
-        échéant.
+      <h2>Mesure d'audience publicitaire (Meta)</h2>
+      <p>
+        Uniquement si vous cliquez sur «&nbsp;Accepter&nbsp;», le pixel de Meta est chargé. Il permet de
+        savoir quelles publicités amènent des visites et des clics sur le bouton d'appel, et
+        dépose les cookies <code>_fbp</code> et <code>_fbc</code>, conservés 90 jours. Meta
+        reçoit alors votre adresse IP, des informations sur votre navigateur et les pages
+        consultées.
       </p>
-      <p><a href="/">Retour à la page</a></p>
+      <ul class="prose__list">
+        <li>Base légale : votre consentement (article 6.1.a du RGPD).</li>
+        <li>
+          Destinataire : Meta Platforms Ireland Limited, responsable conjoint pour la collecte.
+          Des données peuvent être transférées aux États-Unis, dans le cadre du Data Privacy
+          Framework UE–États-Unis.
+        </li>
+        <li>Si vous refusez, rien n'est chargé depuis Meta et aucun de ces cookies n'est déposé.</li>
+      </ul>
+
+      <h2>Votre choix et comment le modifier</h2>
+      <p>
+        Votre choix est conservé 6 mois dans votre navigateur, puis la question vous est
+        reposée. Vous pouvez le modifier à tout moment avec «&nbsp;Gérer les cookies&nbsp;» en bas de
+        chaque page. Retirer votre consentement supprime les cookies de Meta de ce site.
+      </p>
+      <p>
+        <button type="button" class="btn btn--outline prose__back" data-consent-open>Gérer les cookies</button>
+      </p>
+
+      <h2>Données techniques de la visite</h2>
+      <p>
+        Les identifiants de la campagne publicitaire qui vous a amené ici (paramètres{' '}
+        <code>utm_*</code> et <code>fbclid</code> de l'adresse) sont gardés dans votre navigateur
+        le temps de la visite, puis effacés à la fermeture de l'onglet. L'hébergeur du site
+        ({legal.host.name}) enregistre, comme tout serveur web, des journaux techniques
+        (adresse IP, date, page demandée) pour la sécurité et le bon fonctionnement du site.
+      </p>
+
+      <h2>Vos droits</h2>
+      <p>
+        Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation et
+        d'opposition, ainsi que du droit de retirer votre consentement à tout moment. Pour
+        les exercer, écrivez à {studio.email}. Vous pouvez aussi adresser une réclamation
+        à la CNIL (www.cnil.fr).
+      </p>
+
+      <p><a class="btn btn--dark prose__back" href="/">← Retour à l'offre</a></p>
     </div>
   </main>
   <Footer />
