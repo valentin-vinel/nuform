@@ -210,7 +210,7 @@ export const studio: Studio = {
 
   meta: {
     title: 'nü form - Studio Pilates · Offre de rentrée',
-    description: '[ Description de la page pour les moteurs et le partage, 150 caractères max. ]',
+    description: 'Studio Pilates nü form au Mans : -15 % sur les abonnements Reformer et Hot Pilates, engagement 12 mois, welcome bag offert. Appelle le studio.',
   },
 
   hero: {
