@@ -115,7 +115,12 @@ export interface Studio {
   /** Libellé unique de l'appel à l'action, identique partout. */
   cta: { label: string };
 
-  meta: { title: string; description: string };
+  meta: {
+    title: string;
+    description: string;
+    /** Aperçu de partage (og:image), recadré en 1200 × 630. Exige `siteUrl`. null : aucun. */
+    image: PhotoSlot | null;
+  };
 
   hero: {
     /** Reprend l'accroche de l'annonce Meta. En capitales à l'affichage. */
@@ -179,7 +184,7 @@ export interface Studio {
 }
 
 export const studio: Studio = {
-  siteUrl: '',
+  siteUrl: 'https://nu-form.netlify.app',
   name: 'nü form',
   tagline: '', // déjà dans le logo
   logo: 'logo.png',
@@ -211,6 +216,11 @@ export const studio: Studio = {
   meta: {
     title: 'nü form - Studio Pilates · Offre de rentrée',
     description: 'Studio Pilates nü form au Mans : -15 % sur les abonnements Reformer et Hot Pilates, engagement 12 mois, welcome bag offert. Appelle le studio.',
+    image: {
+      file: 'boutique.jpg',
+      subject: 'Devanture du studio',
+      alt: 'Devanture orange du studio nü form, place Aristide Briand au Mans',
+    },
   },
 
   hero: {
