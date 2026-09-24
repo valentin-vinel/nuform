@@ -43,7 +43,10 @@ if (!pixelId) {
     // Événement Contact : une seule fois par session, au premier clic sur un
     // lien tel:. Un clic n'est pas un appel décroché, ce n'est pas une conversion.
     // L'eventID est conservé pour la déduplication avec la CAPI.
+    // Sans consentement, le pixel n'est pas chargé : rien n'est marqué comme
+    // envoyé, pour qu'un clic après acceptation déclenche bien l'événement.
     window.__trackContact = function () {
+      if (!window.fbq) return;
       try {
         if (sessionStorage.getItem('contactFired') === '1') return;
         const eventId =
@@ -52,7 +55,7 @@ if (!pixelId) {
           String(Date.now()) + Math.random();
         sessionStorage.setItem('contactFired', '1');
         sessionStorage.setItem('contactEventId', eventId);
-        if (window.fbq) window.fbq('track', 'Contact', {}, { eventID: eventId });
+        window.fbq('track', 'Contact', {}, { eventID: eventId });
       } catch {
         // storage indisponible : on ne déclenche pas, plutôt que de compter en double.
       }
