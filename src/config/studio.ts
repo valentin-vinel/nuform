@@ -218,7 +218,7 @@ export const studio: Studio = {
     photo: {
       file: "studio7.jpeg",
       subject: 'Photo hero - visuel de campagne, plan rapproché, tenue orange',
-      alt: 'Photo hero',
+      alt: 'Pratiquante en tenue orange siglée nü form, allongée sur un reformer',
     },
   },
 
@@ -280,12 +280,12 @@ export const studio: Studio = {
       text: '',
       swipeHint: 'Faites glisser pour parcourir',
       photos: [
-        { file: "studio10.jpeg", subject: 'Photo - accueil, vestiaire', alt: 'Photo du studio et reformers' },
-        { file: 'studio2.jpg', subject: 'Photo - reformers', alt: 'Photo des reformers' },
-        { file: "studio3.jpg", subject: 'Photo - mur, décoration et accessoires', alt: 'Photo du décord mural, accessoires et tapis' },
-        { file: 'studio1.jpg', subject: 'Photo - la salle, reformers', alt: 'Photo du studio, reformer et tapis' },
-        { file: "studio12.jpg", subject: 'Photo - ', alt: 'Photo de la devanture du studio' },
-        { file: "studio6.jpeg", subject: 'Photo - accessoires', alt: "Photo des accessoires et tapis" },
+        { file: "studio10.jpeg", subject: 'Photo - accueil, vestiaire', alt: 'Salle de reformers sous des puits de lumière, logo nü form au mur' },
+        { file: 'studio2.jpg', subject: 'Photo - reformers', alt: 'Reformers noirs alignés, sangles rouges et logo nü form gravé sur le cadre' },
+        { file: "studio3.jpg", subject: 'Photo - mur, décoration et accessoires', alt: 'Mur d’accessoires sous l’enseigne nü form Studio Pilates : ballons et tapis siglés' },
+        { file: 'studio1.jpg', subject: 'Photo - la salle, reformers', alt: 'Reformers devant un mur de ballons et de tapis nü form rangés' },
+        { file: "studio12.jpg", subject: 'Photo - ', alt: 'Une coach guide une pratiquante allongée sur un reformer' },
+        { file: "studio6.jpeg", subject: 'Photo - accessoires', alt: 'Tapis caramel marqué nü form Studio Pilates, en gros plan' },
 
       ],
     },
@@ -307,10 +307,10 @@ export const studio: Studio = {
         alt: 'Devanture orange du studio nü form, place Aristide Briand',
       },
       photos: [
-        { file: 'studio13.png', subject: 'Photo carrée 1', alt: 'Photo' },
-        { file: 'studio11.jpg', subject: 'Photo carrée 2', alt: 'Photo' },
-        { file: 'studio15.jpg', subject: 'Photo carrée 3', alt: 'Photo' },
-        { file: 'studio14.png', subject: 'Photo carrée 4', alt: 'Photo' },
+        { file: 'studio13.png', subject: 'Photo carrée 1', alt: 'Coin café du studio : comptoir en inox et mur orange au logo nü form' },
+        { file: 'studio11.jpg', subject: 'Photo carrée 2', alt: 'Trois pratiquantes en étirement, un bras tendu vers le plafond' },
+        { file: 'studio15.jpg', subject: 'Photo carrée 3', alt: 'Séance en plein air sur tapis nü form, lests aux chevilles' },
+        { file: 'studio14.png', subject: 'Photo carrée 4', alt: 'Espace d’accueil avec fauteuils, tables et enseigne lumineuse nü form' },
       ],
     },
   },
