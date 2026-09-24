@@ -20,13 +20,13 @@ const { legal } = studio;
         Téléphone : {studio.phoneDisplay}. Courriel : {studio.email}.
       </p>
 
-      <h2>Directeur de la publication</h2>
+      <h2>Direction de la publication</h2>
       <p>{legal.publicationDirector}.</p>
 
       <h2>Hébergement</h2>
       <p>
-        {legal.host.name}, {legal.host.address}.<br />
-        Téléphone : {legal.host.phone}.
+        {legal.host.name}, {legal.host.address}.
+        {legal.host.phone && <><br />Téléphone : {legal.host.phone}.</>}
       </p>
 
       <h2>Propriété intellectuelle</h2>

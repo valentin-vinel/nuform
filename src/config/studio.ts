@@ -101,6 +101,7 @@ export interface Studio {
     vat: string;
     /** Prénom, nom et fonction, ex. « Jeanne Martin, gérante ». */
     publicationDirector: string;
+    /** `phone` vide : ligne masquée (hébergeur sans numéro publié). */
     host: { name: string; address: string; phone: string };
   };
 
@@ -183,19 +184,20 @@ export const studio: Studio = {
   tagline: '', // déjà dans le logo
   logo: 'logo.png',
   address: '11 place Aristide Briand, 72000 Le Mans',
-  legalName: '[ Raison sociale ]',
-  email: '[ contact@… ]',
+  legalName: 'NU FORM',
+  email: 'contact@nuform-pilates.com',
   legal: {
-    form: '[ Forme juridique ]',
-    capital: '[ Capital social ]',
+    form: 'SAS',
+    capital: '1 000 €',
     headOffice: '',
-    registration: '[ RCS Le Mans + SIREN ]',
-    vat: '[ N° de TVA intracommunautaire ]',
-    publicationDirector: '[ Prénom Nom, fonction ]',
+    registration: 'RCS Le Mans 101 168 359 (SIRET 101 168 359 00012)',
+    vat: 'FR43101168359',
+    publicationDirector: 'Sinda El Yaagoubi, dirigeante',
     host: {
-      name: '[ Hébergeur ]',
-      address: '[ Adresse de l’hébergeur ]',
-      phone: '[ Téléphone de l’hébergeur ]',
+      name: 'Netlify, Inc.',
+      address: '101 2nd Street, San Francisco, CA 94105, États-Unis',
+      // Netlify ne publie aucun numéro : contact écrit uniquement.
+      phone: '',
     },
   },
 
