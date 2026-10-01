@@ -24,10 +24,10 @@ import CtaButton from './CtaButton.astro';
 </a>
 
 <script>
-  // Masqués tant que le hero ou le formulaire est à l'écran (ils suffisent),
+  // Masqués tant que le hero ou l'un des formulaires est à l'écran (ils suffisent),
   // affichés partout ailleurs jusqu'en bas de la page.
   const stickies = document.querySelectorAll<HTMLElement>('[data-sticky]');
-  const targets = ['hero', 'rappel']
+  const targets = ['hero', 'rappel', 'rappel-bas']
     .map((id) => document.getElementById(id))
     .filter((el): el is HTMLElement => el !== null);
   const onScreen = new Set<Element>();

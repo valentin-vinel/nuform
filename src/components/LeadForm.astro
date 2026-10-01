@@ -10,12 +10,17 @@ import PhoneAlt from './PhoneAlt.astro';
  * Sans JavaScript, le formulaire s'envoie normalement et Netlify redirige vers /merci/.
  * Avec JavaScript, l'envoi reste sur la page, et l'événement Lead part une fois
  * par session après un envoi réussi. Une demande n'est pas une séance réservée.
+ *
+ * Présent deux fois sur la page (hero et bloc final) : même formulaire Netlify,
+ * mais `id` distinct, dont dérivent les identifiants des champs.
+ * « rappel » est la cible des boutons d'appel à l'action.
  */
 interface Props {
+  id?: string;
   class?: string;
 }
 
-const { class: className } = Astro.props;
+const { id = 'rappel', class: className } = Astro.props;
 const { form } = studio;
 
 // Champs cachés remplis à l'envoi depuis sessionStorage (voir Landing.astro).
@@ -23,7 +28,7 @@ const { form } = studio;
 const ATTRIBUTION = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'event_id'];
 ---
 
-<div class:list={['card', 'leadform', className]} id="rappel" data-lead>
+<div class:list={['card', 'leadform', className]} id={id} data-lead>
   <div data-lead-body>
     <h3 class="leadform__title">{form.title}</h3>
     <p class="leadform__text">{form.text}</p>
@@ -43,10 +48,10 @@ const ATTRIBUTION = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 
       {ATTRIBUTION.map((name) => <input type="hidden" name={name} value="" />)}
 
       <div class="field">
-        <label class="field__label" for="lead-prenom">{form.firstNameLabel}</label>
+        <label class="field__label" for={`${id}-prenom`}>{form.firstNameLabel}</label>
         <input
           class="field__input"
-          id="lead-prenom"
+          id={`${id}-prenom`}
           name="prenom"
           type="text"
           autocomplete="given-name"
@@ -56,19 +61,19 @@ const ATTRIBUTION = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 
       </div>
 
       <div class="field">
-        <label class="field__label" for="lead-telephone">{form.phoneLabel}</label>
+        <label class="field__label" for={`${id}-telephone`}>{form.phoneLabel}</label>
         <input
           class="field__input"
-          id="lead-telephone"
+          id={`${id}-telephone`}
           name="telephone"
           type="tel"
           inputmode="tel"
           autocomplete="tel"
           pattern="(?:(?:\+|00)33[\s.\-]?|0)[1-9](?:[\s.\-]?\d{2}){4}"
-          aria-describedby="lead-telephone-aide"
+          aria-describedby={`${id}-telephone-aide`}
           required
         />
-        <p class="field__hint" id="lead-telephone-aide">{form.phoneHint}</p>
+        <p class="field__hint" id={`${id}-telephone-aide`}>{form.phoneHint}</p>
       </div>
 
       <button class="btn leadform__submit" type="submit" data-sending={form.sending} data-lead-submit>{form.submit}</button>
@@ -90,8 +95,6 @@ const ATTRIBUTION = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 
 </div>
 
 <script>
-  const root = document.querySelector<HTMLElement>('[data-lead]');
-  const form = root?.querySelector<HTMLFormElement>('[data-lead-form]');
   const w = window as any;
 
   function newId(): string {
@@ -126,7 +129,9 @@ const ATTRIBUTION = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 
     return eventId;
   }
 
-  if (root && form) {
+  document.querySelectorAll<HTMLElement>('[data-lead]').forEach((root) => {
+    const form = root.querySelector<HTMLFormElement>('[data-lead-form]');
+    if (!form) return;
     const body = root.querySelector<HTMLElement>('[data-lead-body]')!;
     const done = root.querySelector<HTMLElement>('[data-lead-done]')!;
     const error = root.querySelector<HTMLElement>('[data-lead-error]')!;
@@ -164,5 +169,5 @@ const ATTRIBUTION = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 
         sending = false;
       }
     });
-  }
+  });
 </script>

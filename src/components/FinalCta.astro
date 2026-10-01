@@ -1,8 +1,7 @@
 ---
 import { studio } from '../config/studio';
 import { titleHtml } from '../lib/text';
-import CtaButton from './CtaButton.astro';
-import PhoneAlt from './PhoneAlt.astro';
+import LeadForm from './LeadForm.astro';
 import Photo from './Photo.astro';
 
 const { title, text, storefront, photos } = studio.sections.final;
@@ -14,30 +13,30 @@ const { title, text, storefront, photos } = studio.sections.final;
       <h2 class="display final__title" id="final-titre" set:html={titleHtml(title)} />
       {text && <p class="final__text">{text}</p>}
     </div>
-    <div class="final__action">
-      <CtaButton variant="light" />
-      <PhoneAlt class="final__phone" />
+
+    <div class="final__body">
+      <LeadForm id="rappel-bas" class="final__form" />
+
+      {(storefront || photos.length > 0) && (
+        <div class="final__visit">
+          {storefront && (
+            <Photo
+              photo={storefront}
+              class="final__storefront"
+              widths={[300, 400, 640, 960, 1200]}
+              sizes="(min-width: 860px) 300px, calc(100vw - 2.5rem)"
+            />
+          )}
+          {photos.map((photo) => (
+            <Photo
+              photo={photo}
+              class="final__square"
+              widths={[200, 400, 600]}
+              sizes="(min-width: 860px) 200px, calc(50vw - 1.5rem)"
+            />
+          ))}
+        </div>
+      )}
     </div>
   </div>
-
-  {(storefront || photos.length > 0) && (
-    <div class="wrap final__visit">
-      {storefront && (
-        <Photo
-          photo={storefront}
-          class="final__storefront"
-          widths={[400, 640, 960, 1200]}
-          sizes="(min-width: 860px) 565px, calc(100vw - 2.5rem)"
-        />
-      )}
-      {photos.map((photo) => (
-        <Photo
-          photo={photo}
-          class="final__square"
-          widths={[240, 400, 600]}
-          sizes="(min-width: 860px) 275px, calc(50vw - 1.5rem)"
-        />
-      ))}
-    </div>
-  )}
 </section>
