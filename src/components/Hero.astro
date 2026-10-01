@@ -2,6 +2,7 @@
 import { studio } from '../config/studio';
 import { titleHtml } from '../lib/text';
 import CtaButton from './CtaButton.astro';
+import LeadForm from './LeadForm.astro';
 import Logo from './Logo.astro';
 import PhoneAlt from './PhoneAlt.astro';
 import Photo from './Photo.astro';
@@ -33,9 +34,12 @@ const { hero, offer } = studio;
       </ul>
     </div>
 
-    <div class="hero__actions">
+    <!-- Ordinateur : le formulaire, juste en dessous, remplace le bouton. -->
+    <div class="hero__actions only-mobile">
       <CtaButton variant="dark" />
       <PhoneAlt class="hero__phone" />
     </div>
   </div>
+
+  <LeadForm class="hero__form" />
 </section>

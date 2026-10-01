@@ -240,23 +240,28 @@ img { display: block; max-width: 100%; height: auto; }
 
 /* ── Hero ────────────────────────────────────────────────── */
 /* Mobile : photo en fond, texte clair centré par-dessus, voile sombre uni
-   pour la lisibilité. Ordinateur : deux colonnes, texte foncé à gauche. */
+   pour la lisibilité, puis le formulaire sous la photo. Ordinateur : deux
+   colonnes, texte foncé à gauche, photo à droite et formulaire posé dessus. */
 
 .hero {
   position: relative;
   isolation: isolate;
-  background: var(--c-peach);
+  display: grid;
+  grid-template-columns: 100%;
+  background: var(--c-bg);
   color: var(--c-deep-ink);
   text-align: center;
 }
 
+/* Même cellule que le texte : la photo prend sa hauteur, sans le dépasser. */
 .hero__photo {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
   z-index: -1;
   border-radius: 0;
   border: 0;
+  background: var(--c-peach);
 }
+.hero__photo img { position: absolute; inset: 0; }
 
 .hero__photo.photo--empty { place-items: start center; padding-top: 6.5rem; }
 .hero__photo .photo__subject { max-width: 34ch; }
@@ -269,7 +274,15 @@ img { display: block; max-width: 100%; height: auto; }
   opacity: 0.55;
 }
 
+.hero__form {
+  grid-area: 2 / 1;
+  margin: 2rem 1.25rem 2.5rem;
+  color: var(--c-ink);
+  text-align: left;
+}
+
 .hero__content {
+  grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -334,21 +347,18 @@ img { display: block; max-width: 100%; height: auto; }
 
 @media (min-width: 860px) {
   .hero {
-    display: grid;
     grid-template-columns: 3fr 2fr; /* texte 60 %, photo 40 % */
+    background: var(--c-peach);
     color: var(--c-ink);
     text-align: left;
   }
 
   .hero__photo {
-    position: relative;
     grid-column: 2;
     grid-row: 1;
     z-index: auto;
     border-left: 1px dashed color-mix(in oklab, currentColor 40%, transparent);
   }
-  /* Hors du flux : la hauteur du hero vient du texte, la photo la remplit. */
-  .hero__photo img { position: absolute; inset: 0; }
   .hero__photo:not(.photo--empty) { border: 0; }
   .hero__photo.photo--empty {
     place-items: center;
@@ -370,6 +380,19 @@ img { display: block; max-width: 100%; height: auto; }
     justify-items: start;
     column-gap: 1.75rem;
     padding: 3rem 3rem 5.5rem max(1.5rem, (100vw - var(--max-w)) / 2 + 1.5rem);
+  }
+
+  /* Carte posée sur la photo, centrée : visible sans défiler. */
+  .hero__form {
+    position: relative;
+    z-index: 1;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    width: min(26rem, 100% - 3rem);
+    margin: 2rem 0;
+    box-shadow: 0 1rem 2.5rem color-mix(in oklab, var(--c-deep) 30%, transparent);
   }
 
   .hero__logo, .hero__title { grid-column: 1 / -1; }
@@ -421,12 +444,12 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 /* ── Séance découverte ──────────────────────────────────── */
-/* Mobile : récapitulatif, formulaire, étapes. Ordinateur : récapitulatif et
-   étapes à gauche, formulaire à droite. */
+/* Le formulaire est dans le hero. Mobile : récapitulatif puis étapes.
+   Ordinateur : côte à côte. */
 
 .discovery__grid {
   display: grid;
-  grid-template-areas: "facts" "form" "steps";
+  grid-template-areas: "facts" "steps";
   gap: 1.25rem;
   max-width: 60rem;
   margin: 2rem auto 0;
@@ -453,8 +476,6 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 .fact__value { margin: 0; font-weight: 600; text-align: right; }
-
-.discovery__form { grid-area: form; }
 
 .discovery__steps {
   grid-area: steps;
@@ -491,9 +512,8 @@ img { display: block; max-width: 100%; height: auto; }
 @media (min-width: 860px) {
   .discovery__grid {
     grid-template-columns: 1fr 1fr;
-    grid-template-areas: "facts form" "steps form";
-    grid-template-rows: auto 1fr;
-    align-items: start;
+    grid-template-areas: "facts steps";
+    align-items: center;
     gap: 1.75rem 2rem;
     margin-top: 2.5rem;
   }

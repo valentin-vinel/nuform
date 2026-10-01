@@ -1,7 +1,6 @@
 ---
 import { studio } from '../config/studio';
 import { fill, titleHtml } from '../lib/text';
-import LeadForm from './LeadForm.astro';
 
 const { eyebrow, title, text, facts, steps } = studio.sections.offer;
 ---
@@ -21,8 +20,6 @@ const { eyebrow, title, text, facts, steps } = studio.sections.offer;
           </div>
         ))}
       </dl>
-
-      <LeadForm class="discovery__form" />
 
       {steps.length > 0 && (
         <ol class="discovery__steps">
