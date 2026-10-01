@@ -330,6 +330,7 @@ img { display: block; max-width: 100%; height: auto; }
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  justify-content: space-between;
 }
 
 .hero__perks li::before, .hero__perks li::after { content: " — "; }
@@ -347,7 +348,7 @@ img { display: block; max-width: 100%; height: auto; }
 
 @media (min-width: 860px) {
   .hero {
-    grid-template-columns: 3fr 2fr; /* texte 60 %, photo 40 % */
+    grid-template-columns: 1fr 1fr; /* texte 50 %, photo 50 % */
     background: var(--c-peach);
     color: var(--c-ink);
     text-align: left;
@@ -368,17 +369,10 @@ img { display: block; max-width: 100%; height: auto; }
   }
   .hero__photo::after { content: none; }
 
-  /* Grille à deux colonnes : le badge et le bouton partagent la première,
-     large comme le plus large des deux, et s'y étirent : même largeur.
-     .hero__offer et .hero__actions s'effacent pour que leurs enfants y prennent place. */
   .hero__content {
     grid-column: 1;
     grid-row: 1;
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    align-items: center;
-    justify-items: start;
-    column-gap: 1.75rem;
+    align-items: flex-start;
     padding: 3rem 3rem 5.5rem max(1.5rem, (100vw - var(--max-w)) / 2 + 1.5rem);
   }
 
@@ -395,21 +389,23 @@ img { display: block; max-width: 100%; height: auto; }
     box-shadow: 0 1rem 2.5rem color-mix(in oklab, var(--c-deep) 30%, transparent);
   }
 
-  .hero__logo, .hero__title { grid-column: 1 / -1; }
   .hero__logo { align-items: flex-start; }
-  .hero__title { margin-top: 4rem; max-width: 14ch; }
+  .hero__title { margin-top: 4rem; max-width: 15ch; }
 
-  .hero__offer, .hero__actions { display: contents; }
+  /* Badge large comme la carte du formulaire, conditions sur une ligne dessous. */
+  .hero__offer { width: min(26rem, 100%); margin-top: 1.5rem; }
 
-  .badge { grid-column: 1; justify-self: stretch; margin-top: 1.5rem; padding: 1.1rem 1rem; }
+  .badge { padding: 1.1rem 1rem; }
   .badge__value { font-size: 3.25rem; }
 
-  .hero__perks { grid-column: 2; display: grid; gap: 0.6rem; margin-top: 1.5rem; font-size: 0.625rem; }
+  .hero__perks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    margin-top: 0.9rem;
+    font-size: 0.625rem;
+  }
   .hero__perks li::before, .hero__perks li::after { content: none; }
-
-  .hero__actions .btn { grid-column: 1; justify-self: stretch; margin-top: 1.75rem; }
-
-  .hero__phone { grid-column: 1 / -1; margin-top: 0.75rem; }
 
   .hero__phone { font-size: 0.9375rem; }
 }

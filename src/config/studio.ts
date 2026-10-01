@@ -212,7 +212,7 @@ export const studio: Studio = {
   cta: { label: 'Demander ma séance à {price}' },
 
   meta: {
-    title: 'nü form - Studio Pilates · Séance découverte à 15 €',
+    title: 'Nü Form - Studio Pilates · Séance découverte à 15 €',
     description: 'Studio Pilates nü form au Mans : ta première séance Reformer · Nü Sculpt à 15 €. Laisse ton numéro, le studio te rappelle pour choisir le créneau.',
     image: {
       file: 'boutique.jpg',
@@ -223,7 +223,7 @@ export const studio: Studio = {
 
   hero: {
     // Provisoire : à remplacer par l'accroche de l'annonce Meta dès qu'elle est fixée.
-    title: 'Découvre le *Pilates* Reformer,\n**au cœur du Mans.**',
+    title: 'Découvre le Pilates Reformer,\n**au cœur du Mans.**',
     photo: {
       file: "studio7.jpeg",
       subject: 'Photo hero - visuel de campagne, plan rapproché, tenue orange',
