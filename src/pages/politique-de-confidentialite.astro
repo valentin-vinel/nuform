@@ -3,7 +3,7 @@ import Landing from '../layouts/Landing.astro';
 import Footer from '../components/Footer.astro';
 import { studio } from '../config/studio';
 
-const { legal } = studio;
+const { legal, form } = studio;
 ---
 
 <Landing
@@ -22,18 +22,43 @@ const { legal } = studio;
         {studio.legalName}, {legal.headOffice || studio.address}. Courriel : {studio.email}.
       </p>
 
-      <h2>Ce que cette page collecte</h2>
+      <h2>Votre demande de rappel</h2>
       <p>
-        Cette page ne contient aucun formulaire et ne vous demande aucune information.
-        Les appels passés au studio depuis le bouton «&nbsp;{studio.cta.label}&nbsp;» passent par votre
+        Le formulaire «&nbsp;{form.title}&nbsp;» recueille votre prénom et votre numéro de
+        téléphone. Ils servent uniquement à vous rappeler pour organiser votre séance
+        découverte.
+      </p>
+      <ul class="prose__list">
+        <li>
+          Base légale : les mesures précontractuelles prises à votre demande (article 6.1.b
+          du RGPD).
+        </li>
+        <li>
+          Avec votre demande sont aussi enregistrés : sa date, votre adresse IP et votre
+          navigateur (protection contre les envois automatisés), ainsi que la campagne
+          publicitaire qui vous a amené ici (paramètres <code>utm_*</code> de l'adresse).
+          Si vous avez accepté la mesure d'audience, l'identifiant de clic Meta
+          (<code>fbclid</code>) et un identifiant technique de l'événement s'y ajoutent.
+        </li>
+        <li>Destinataire : l'équipe du studio {studio.name}, et elle seule.</li>
+        <li>
+          Prestataires techniques, qui traitent ces données pour le compte du studio et
+          sur ses instructions : {legal.host.name} (réception des demandes) et Google
+          (tableur de suivi des demandes). Des données peuvent être transférées aux
+          États-Unis, dans le cadre du Data Privacy Framework UE–États-Unis.
+        </li>
+        <li>Durée de conservation : {form.retention}.</li>
+      </ul>
+      <p>
+        Les appels passés au studio depuis le numéro affiché sur la page passent par votre
         téléphone : la page n'enregistre ni votre numéro ni le contenu de l'appel.
       </p>
 
       <h2>Mesure d'audience publicitaire (Meta)</h2>
       <p>
         Uniquement si vous cliquez sur «&nbsp;Accepter&nbsp;», le pixel de Meta est chargé. Il permet de
-        savoir quelles publicités amènent des visites et des clics sur le bouton d'appel, et
-        dépose les cookies <code>_fbp</code> et <code>_fbc</code>, conservés 90 jours. Meta
+        savoir quelles publicités amènent des visites, des demandes de rappel et des clics
+        sur le numéro du studio, et dépose les cookies <code>_fbp</code> et <code>_fbc</code>, conservés 90 jours. Meta
         reçoit alors votre adresse IP, des informations sur votre navigateur et les pages
         consultées.
       </p>
@@ -61,7 +86,9 @@ const { legal } = studio;
       <p>
         Les identifiants de la campagne publicitaire qui vous a amené ici (paramètres{' '}
         <code>utm_*</code> et <code>fbclid</code> de l'adresse) sont gardés dans votre navigateur
-        le temps de la visite, puis effacés à la fermeture de l'onglet. L'hébergeur du site
+        le temps de la visite, puis effacés à la fermeture de l'onglet. Ils ne quittent votre
+        navigateur que si vous envoyez une demande de rappel, dans les conditions décrites
+        plus haut. L'hébergeur du site
         ({legal.host.name}) enregistre, comme tout serveur web, des journaux techniques
         (adresse IP, date, page demandée) pour la sécurité et le bon fonctionnement du site.
       </p>

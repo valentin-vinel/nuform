@@ -1,0 +1,168 @@
+---
+import { studio } from '../config/studio';
+import PhoneAlt from './PhoneAlt.astro';
+
+/**
+ * Demande de rappel, reçue par Netlify Forms (détection au déploiement grâce à
+ * data-netlify) puis copiée dans Google Sheets par netlify/functions/submission-created.ts.
+ *
+ * Envoi en POST uniquement : rien de personnel ne passe dans l'URL.
+ * Sans JavaScript, le formulaire s'envoie normalement et Netlify redirige vers /merci/.
+ * Avec JavaScript, l'envoi reste sur la page, et l'événement Lead part une fois
+ * par session après un envoi réussi. Une demande n'est pas une séance réservée.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const { form } = studio;
+
+// Champs cachés remplis à l'envoi depuis sessionStorage (voir Landing.astro).
+// Ils doivent exister dans le HTML pour que Netlify les enregistre.
+const ATTRIBUTION = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'event_id'];
+---
+
+<div class:list={['card', 'leadform', className]} id="rappel" data-lead>
+  <div data-lead-body>
+    <h3 class="leadform__title">{form.title}</h3>
+    <p class="leadform__text">{form.text}</p>
+
+    <form
+      name={form.name}
+      method="POST"
+      action="/merci/"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      data-lead-form
+    >
+      <input type="hidden" name="form-name" value={form.name} />
+      <p class="sr-only" aria-hidden="true">
+        <label>Ne pas remplir <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </p>
+      {ATTRIBUTION.map((name) => <input type="hidden" name={name} value="" />)}
+
+      <div class="field">
+        <label class="field__label" for="lead-prenom">{form.firstNameLabel}</label>
+        <input
+          class="field__input"
+          id="lead-prenom"
+          name="prenom"
+          type="text"
+          autocomplete="given-name"
+          maxlength="60"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="lead-telephone">{form.phoneLabel}</label>
+        <input
+          class="field__input"
+          id="lead-telephone"
+          name="telephone"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          pattern="(?:(?:\+|00)33[\s.\-]?|0)[1-9](?:[\s.\-]?\d{2}){4}"
+          aria-describedby="lead-telephone-aide"
+          required
+        />
+        <p class="field__hint" id="lead-telephone-aide">{form.phoneHint}</p>
+      </div>
+
+      <button class="btn leadform__submit" type="submit" data-sending={form.sending} data-lead-submit>{form.submit}</button>
+
+      <p class="leadform__error" role="alert" hidden data-lead-error>{form.error}</p>
+
+      <p class="leadform__privacy">
+        {form.privacy} <a href="/politique-de-confidentialite/">En savoir plus</a>
+      </p>
+    </form>
+  </div>
+
+  <div class="leadform__done" role="status" tabindex="-1" hidden data-lead-done>
+    <p class="leadform__title">{form.success.title}</p>
+    <p class="leadform__text">{form.success.text}</p>
+  </div>
+
+  <PhoneAlt class="leadform__phone" />
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-lead]');
+  const form = root?.querySelector<HTMLFormElement>('[data-lead-form]');
+  const w = window as any;
+
+  function newId(): string {
+    return (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random();
+  }
+
+  function session(key: string): string {
+    try { return sessionStorage.getItem(key) || ''; } catch { return ''; }
+  }
+
+  // Les UTM servent au studio à savoir d'où viennent les demandes. fbclid et
+  // l'eventID (déduplication pixel / CAPI) relèvent de la mesure publicitaire :
+  // transmis uniquement si le pixel a été chargé, donc après consentement.
+  function fillAttribution(form: HTMLFormElement): string {
+    const set = (name: string, value: string) => {
+      const input = form.elements.namedItem(name);
+      if (input instanceof HTMLInputElement) input.value = value;
+    };
+    for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
+      set(key, session(key));
+    }
+
+    let eventId = '';
+    if (w.__pixelLoaded) {
+      eventId = session('leadEventId') || newId();
+      try { sessionStorage.setItem('leadEventId', eventId); } catch {}
+      set('fbclid', session('fbclid'));
+    } else {
+      set('fbclid', '');
+    }
+    set('event_id', eventId);
+    return eventId;
+  }
+
+  if (root && form) {
+    const body = root.querySelector<HTMLElement>('[data-lead-body]')!;
+    const done = root.querySelector<HTMLElement>('[data-lead-done]')!;
+    const error = root.querySelector<HTMLElement>('[data-lead-error]')!;
+    const submit = root.querySelector<HTMLButtonElement>('[data-lead-submit]')!;
+    const submitLabel = submit.textContent;
+    let sending = false;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (sending) return;
+      sending = true;
+      error.hidden = true;
+      submit.disabled = true;
+      if (submit.dataset.sending) submit.textContent = submit.dataset.sending;
+
+      const eventId = fillAttribution(form);
+
+      try {
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString(),
+        });
+        if (!response.ok) throw new Error(String(response.status));
+
+        body.hidden = true;
+        done.hidden = false;
+        done.focus();
+        if (eventId) w.__trackOnce?.('Lead', eventId);
+      } catch {
+        error.hidden = false;
+        submit.disabled = false;
+        submit.textContent = submitLabel;
+      } finally {
+        sending = false;
+      }
+    });
+  }
+</script>

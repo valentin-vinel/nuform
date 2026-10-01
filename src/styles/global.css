@@ -330,8 +330,7 @@ img { display: block; max-width: 100%; height: auto; }
   margin-top: 1.25rem;
 }
 
-.hero__phone { font-size: 0.75rem; }
-.hero__number { font-weight: 600; letter-spacing: 0.06em; }
+.hero__phone { font-size: 0.8125rem; }
 
 @media (min-width: 860px) {
   .hero {
@@ -359,37 +358,35 @@ img { display: block; max-width: 100%; height: auto; }
   }
   .hero__photo::after { content: none; }
 
+  /* Grille à deux colonnes : le badge et le bouton partagent la première,
+     large comme le plus large des deux, et s'y étirent : même largeur.
+     .hero__offer et .hero__actions s'effacent pour que leurs enfants y prennent place. */
   .hero__content {
     grid-column: 1;
     grid-row: 1;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    align-items: center;
+    justify-items: start;
+    column-gap: 1.75rem;
     padding: 3rem 3rem 5.5rem max(1.5rem, (100vw - var(--max-w)) / 2 + 1.5rem);
   }
 
+  .hero__logo, .hero__title { grid-column: 1 / -1; }
   .hero__logo { align-items: flex-start; }
   .hero__title { margin-top: 4rem; max-width: 14ch; }
 
-  .hero__offer {
-    display: flex;
-    align-items: center;
-    gap: 1.75rem;
-    width: auto;
-    margin-top: 1.5rem;
-  }
+  .hero__offer, .hero__actions { display: contents; }
 
-  .badge { width: 13.5rem; padding: 1.1rem 1rem; }
+  .badge { grid-column: 1; justify-self: stretch; margin-top: 1.5rem; padding: 1.1rem 1rem; }
   .badge__value { font-size: 3.25rem; }
 
-  .hero__perks { display: grid; gap: 0.6rem; margin-top: 0; font-size: 0.625rem; }
+  .hero__perks { grid-column: 2; display: grid; gap: 0.6rem; margin-top: 1.5rem; font-size: 0.625rem; }
   .hero__perks li::before, .hero__perks li::after { content: none; }
 
-  .hero__actions {
-    flex-direction: row;
-    align-items: center;
-    gap: 1.5rem;
-    width: auto;
-    margin-top: 1.75rem;
-  }
+  .hero__actions .btn { grid-column: 1; justify-self: stretch; margin-top: 1.75rem; }
+
+  .hero__phone { grid-column: 1 / -1; margin-top: 0.75rem; }
 
   .hero__phone { font-size: 0.9375rem; }
 }
@@ -423,110 +420,158 @@ img { display: block; max-width: 100%; height: auto; }
   }
 }
 
-/* ── Tarifs ──────────────────────────────────────────────── */
-/* Une carte par catégorie, deux côte à côte sur ordinateur, bloc centré. */
+/* ── Séance découverte ──────────────────────────────────── */
+/* Mobile : récapitulatif, formulaire, étapes. Ordinateur : récapitulatif et
+   étapes à gauche, formulaire à droite. */
 
-
-.pricing__cats {
+.discovery__grid {
   display: grid;
+  grid-template-areas: "facts" "form" "steps";
   gap: 1.25rem;
   max-width: 60rem;
   margin: 2rem auto 0;
 }
 
-.cat { padding: 1.5rem 1.25rem 0.5rem; }
+.discovery__facts { grid-area: facts; margin: 0; padding: 0.25rem 1.25rem; }
 
-.cat__head {
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--c-border);
+.fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.85rem;
 }
 
-.cat__name {
-  font-size: 0.8125rem;
+.fact + .fact { border-top: 1px solid var(--c-border); }
+
+.fact__label {
+  color: var(--c-muted);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.fact__value { margin: 0; font-weight: 600; text-align: right; }
+
+.discovery__form { grid-area: form; }
+
+.discovery__steps {
+  grid-area: steps;
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0 0.25rem;
+  list-style: none;
+  counter-reset: step;
+  font-size: 0.875rem;
+}
+
+.discovery__steps li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  counter-increment: step;
+}
+
+.discovery__steps li::before {
+  content: counter(step);
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+@media (min-width: 860px) {
+  .discovery__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "facts form" "steps form";
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    gap: 1.75rem 2rem;
+    margin-top: 2.5rem;
+  }
+  .discovery__facts { padding-inline: 1.75rem; }
+}
+
+/* ── Formulaire de rappel ────────────────────────────────── */
+
+.leadform { padding: 1.5rem 1.25rem; scroll-margin-top: 1rem; }
+
+.leadform__title { font-size: 1.125rem; font-weight: 600; line-height: 1.3; }
+.leadform__text { margin-top: 0.35rem; color: var(--c-muted); font-size: 0.875rem; }
+
+.leadform form { display: grid; gap: 1rem; margin-top: 1.25rem; }
+
+.field { display: grid; gap: 0.35rem; }
+
+.field__label {
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-.cat__intro { margin-top: 0.4rem; color: var(--c-muted); font-size: 0.8125rem; }
-
-.plan {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-block: 1rem;
-}
-
-.plan + .plan { border-top: 1px solid var(--c-border); }
-
-.plan--featured {
-  margin-inline: -0.75rem;
-  padding-inline: 0.75rem;
+/* 16 px minimum : en dessous, iOS zoome sur le champ au focus. */
+.field__input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--c-border);
   border-radius: calc(var(--radius) * 2 / 3);
-  background: color-mix(in oklab, var(--c-accent) 7%, var(--c-surface));
-}
-.plan--featured, .plan--featured + .plan { border-top-color: transparent; }
-
-.plan__flag {
-  display: inline-block;
-  margin-bottom: 0.35rem;
-  padding: 0.15rem 0.5rem;
-  border-radius: 3px;
-  background: var(--c-accent);
-  color: var(--c-accent-ink);
-  font-size: 0.5625rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font: inherit;
+  font-size: 1rem;
 }
 
-.plan__name { font-size: 1rem; font-weight: 600; line-height: 1.3; }
-.plan__freq { margin-top: 0.15rem; color: var(--c-muted); font-size: 0.8125rem; }
-
-.plan__right { text-align: right; }
-
-.plan__price { white-space: nowrap; }
-
-.plan__now {
-  color: var(--c-accent);
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.15;
+.field__input:focus-visible {
+  border-color: var(--c-accent);
+  outline: 2px solid var(--c-accent);
+  outline-offset: 1px;
 }
 
-.plan__unit { margin-left: 0.25rem; color: var(--c-muted); font-size: 0.75rem; }
+.field__input:user-invalid { border-color: var(--c-accent); border-width: 2px; }
 
-.plan__meta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 0 0.5rem;
-  margin-top: 0.15rem;
+.field__hint { color: var(--c-muted); font-size: 0.75rem; }
+
+.leadform__submit { width: 100%; }
+.leadform__submit:disabled { opacity: 0.7; cursor: progress; }
+
+.leadform__error {
+  padding: 0.75rem 0.9rem;
+  border-left: 3px solid var(--c-accent);
+  border-radius: calc(var(--radius) / 3);
+  background: color-mix(in oklab, var(--c-accent) 8%, var(--c-surface));
+  font-size: 0.8125rem;
+}
+
+.leadform__privacy { color: var(--c-muted); font-size: 0.75rem; }
+.leadform__privacy a { color: var(--c-accent); }
+
+.leadform__done:focus { outline: none; }
+
+.leadform__phone {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--c-border);
   color: var(--c-muted);
-  font-size: 0.75rem;
-}
-
-.pricing__foot {
-  display: grid;
-  justify-items: center;
-  gap: 1.25rem;
-  max-width: 60rem;
-  margin: 1.75rem auto 0;
+  font-size: 0.875rem;
   text-align: center;
 }
 
-.pricing__conditions { max-width: 62ch; color: var(--c-muted); font-size: 0.75rem; }
-
-@media (max-width: 859.98px) {
-  .pricing__foot .btn { width: 100%; }
-}
-
 @media (min-width: 860px) {
-  .pricing__cats { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-  .cat { padding: 1.75rem 1.75rem 0.75rem; }
-  .pricing__foot { margin-top: 2.25rem; }
+  .leadform { padding: 2rem 1.75rem; }
 }
+
+/* Le numéro du studio, en secondaire sous chaque appel à l'action. */
+.phone-alt a { font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
 
 /* ── Studio ──────────────────────────────────────────────── */
 
@@ -786,13 +831,7 @@ html:has(.lightbox[open]) { overflow: hidden; }
 .final__title { font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.25rem); }
 .final__text { max-width: 44ch; margin: 1rem auto 0; font-size: 0.9375rem; }
 .final__action { display: grid; gap: 0.75rem; }
-.final__phone { font-weight: 600; letter-spacing: 0.06em; }
-.final__validity {
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
+.final__phone { font-size: 0.875rem; }
 
 @media (min-width: 860px) {
   .final { padding-block: 3rem; text-align: left; }

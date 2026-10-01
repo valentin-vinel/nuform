@@ -1,25 +1,22 @@
 ---
 import { studio } from '../config/studio';
-import { fill, titleHtml } from '../lib/text';
+import { titleHtml } from '../lib/text';
 import CtaButton from './CtaButton.astro';
+import PhoneAlt from './PhoneAlt.astro';
 import Photo from './Photo.astro';
 
-const { title, text, validity, storefront, photos } = studio.sections.final;
-const validityText = fill(validity);
+const { title, text, storefront, photos } = studio.sections.final;
 ---
 
-<section class="final" id="appel" aria-labelledby="appel-titre">
+<section class="final" aria-labelledby="final-titre">
   <div class="wrap final__inner">
     <div>
-      <h2 class="display final__title" id="appel-titre" set:html={titleHtml(title)} />
-      <p class="final__text">
-        {text} {validityText && <span class="only-desktop">{validityText}.</span>}
-      </p>
+      <h2 class="display final__title" id="final-titre" set:html={titleHtml(title)} />
+      {text && <p class="final__text">{text}</p>}
     </div>
     <div class="final__action">
       <CtaButton variant="light" />
-      <p class="final__phone">{studio.phoneDisplay}</p>
-      {validityText && <p class="final__validity only-mobile">{validityText}</p>}
+      <PhoneAlt class="final__phone" />
     </div>
   </div>
 

@@ -1,0 +1,22 @@
+---
+import Landing from '../layouts/Landing.astro';
+import Footer from '../components/Footer.astro';
+import PhoneAlt from '../components/PhoneAlt.astro';
+import { studio } from '../config/studio';
+
+// Page de retour de Netlify Forms quand le formulaire est envoyé sans JavaScript.
+// Avec JavaScript, la confirmation s'affiche dans la page et celle-ci n'est pas vue.
+const { success } = studio.form;
+---
+
+<Landing title={`Demande envoyée — ${studio.name}`} description={success.text} noindex>
+  <main class="section">
+    <div class="wrap prose">
+      <h1 class="title">{success.title}</h1>
+      <p>{success.text}</p>
+      <PhoneAlt />
+      <p><a class="btn btn--dark prose__back" href="/">← Retour à l'offre</a></p>
+    </div>
+  </main>
+  <Footer />
+</Landing>

@@ -40,29 +40,34 @@ if (!pixelId) {
       window.fbq('track', 'PageView');
     };
 
-    // Événement Contact : une seule fois par session, au premier clic sur un
-    // lien tel:. Un clic n'est pas un appel décroché, ce n'est pas une conversion.
-    // L'eventID est conservé pour la déduplication avec la CAPI.
+    // Événements une seule fois par session, l'eventID conservé pour la
+    // déduplication avec la CAPI :
+    // - Contact : premier clic sur un lien tel:. Un clic n'est pas un appel décroché.
+    // - Lead : demande de rappel envoyée (LeadForm.astro), qui fournit son eventID,
+    //   aussi transmis avec la demande. Une demande n'est pas une séance réservée.
+    // Aucun des deux n'est une conversion.
     // Sans consentement, le pixel n'est pas chargé : rien n'est marqué comme
-    // envoyé, pour qu'un clic après acceptation déclenche bien l'événement.
-    window.__trackContact = function () {
+    // envoyé, pour qu'une action après acceptation déclenche bien l'événement.
+    window.__trackOnce = function (name, eventId) {
       if (!window.fbq) return;
+      const key = name.toLowerCase();
       try {
-        if (sessionStorage.getItem('contactFired') === '1') return;
-        const eventId =
-          sessionStorage.getItem('contactEventId') ||
+        if (sessionStorage.getItem(key + 'Fired') === '1') return;
+        const id =
+          eventId ||
+          sessionStorage.getItem(key + 'EventId') ||
           (crypto.randomUUID && crypto.randomUUID()) ||
           String(Date.now()) + Math.random();
-        sessionStorage.setItem('contactFired', '1');
-        sessionStorage.setItem('contactEventId', eventId);
-        window.fbq('track', 'Contact', {}, { eventID: eventId });
+        sessionStorage.setItem(key + 'Fired', '1');
+        sessionStorage.setItem(key + 'EventId', id);
+        window.fbq('track', name, {}, { eventID: id });
       } catch {
         // storage indisponible : on ne déclenche pas, plutôt que de compter en double.
       }
     };
 
     document.addEventListener('click', function (event) {
-      if (event.target.closest('a[href^="tel:"]')) window.__trackContact();
+      if (event.target.closest('a[href^="tel:"]')) window.__trackOnce('Contact');
     });
   </script>
 )}

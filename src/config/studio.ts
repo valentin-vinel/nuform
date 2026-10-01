@@ -11,10 +11,8 @@
  *    **mot**  → graisse 700
  *    *mot*    → Cormorant Garamond italique (un seul par titre)
  *    \n       → retour à la ligne
- *  Jetons remplacés à l'affichage :
- *    {date}     → date de fin de l'offre (`offer.endDate`)
- *    ((…))      → passage affiché seulement si `offer.endDate` est rempli
- *    {discount} → pourcentage de remise (`offer.discountPercent`)
+ *  Jeton remplacé à l'affichage :
+ *    {price}    → prix de la séance découverte (`offer.price`), ex. « 15 € »
  * ─────────────────────────────────────────────────────────────
  */
 
@@ -28,29 +26,10 @@ export interface PhotoSlot {
   alt: string;
 }
 
-export interface Plan {
-  id: string;
-  /** Intitulé du palier, ex. « 4 séances » ou « Illimité ». */
-  name: string;
-  /** Rythme, ex. « 1x par semaine ». Absent pour l'illimité. */
-  frequency?: string;
-  /** Prix mensuel remisé, sans le symbole €, ex. « 84,15 ». */
-  price: string;
-  /** Prix mensuel avant remise. Absent si aucune remise sur ce palier. */
-  priceBefore?: string;
-  /** Prix par séance calculé sur le prix remisé, ex. « 21,04 ». */
-  pricePerSession?: string;
-  /** Mise en avant. Uniquement si le studio confirme que c'est la plus prise. */
-  featured?: boolean;
-}
-
-export interface PlanCategory {
-  id: string;
-  /** Ex. « Reformer · Nü Sculpt ». */
-  name: string;
-  /** Une phrase de contexte sous le titre. Optionnelle. */
-  intro?: string;
-  plans: Plan[];
+/** Une ligne du récapitulatif de la séance découverte. */
+export interface Fact {
+  label: string;
+  value: string;
 }
 
 export interface Review {
@@ -109,10 +88,10 @@ export interface Studio {
   phone: string;
   /** Le numéro tel qu'on le lit. */
   phoneDisplay: string;
-  /** Mention à côté du numéro. null pour masquer. Seulement si c'est tenu. */
-  phoneNote: string | null;
+  /** Proposé en secondaire, sous chaque appel à l'action : « {phoneAlt} 02 43… ». */
+  phoneAlt: string;
 
-  /** Libellé unique de l'appel à l'action, identique partout. */
+  /** Libellé unique de l'appel à l'action, identique partout. Mène au formulaire. */
   cta: { label: string };
 
   meta: {
@@ -129,21 +108,34 @@ export interface Studio {
   };
 
   offer: {
-    discountPercent: number;
-    /** Sous le pourcentage dans le hero. */
-    discountLabel: string;
-    commitment: string;
-    /** Avantages : hero sur ordinateur, bandeau sur mobile. */
+    /** Prix de la séance découverte, sans le symbole €. */
+    price: string;
+    /** Sous le prix dans le hero. */
+    priceLabel: string;
+    /** Sous le prix dans le hero, ordinateur et mobile. Conditions et cours concernés. */
     perks: string[];
-    /** Date de fin réelle, AAAA-MM-JJ. null : aucune date affichée. */
-    endDate: string | null;
-    categories: PlanCategory[];
-    featuredLabel: string;
-    priceUnit: { short: string; long: string };
-    /** Gabarit du prix par séance, {price} remplacé à l'affichage. */
-    perSessionLabel: string;
-    /** Conditions, hors date de fin qui est rendue à part depuis endDate. */
-    conditions: string[];
+  };
+
+  /**
+   * Formulaire de demande de rappel (Netlify Forms, puis Google Sheets via
+   * netlify/functions/submission-created.ts).
+   */
+  form: {
+    /** Identifiant Netlify du formulaire. Le changer crée un nouveau formulaire côté Netlify. */
+    name: string;
+    title: string;
+    text: string;
+    firstNameLabel: string;
+    phoneLabel: string;
+    phoneHint: string;
+    submit: string;
+    sending: string;
+    /** Sous le bouton, avec un lien vers la politique de confidentialité. */
+    privacy: string;
+    success: { title: string; text: string };
+    error: string;
+    /** Durée de conservation des demandes, reprise dans la politique de confidentialité. */
+    retention: string;
   };
 
   /**
@@ -153,7 +145,15 @@ export interface Studio {
   reassurance: { text: string; mobile: boolean }[];
 
   sections: {
-    offer: { eyebrow: string; title: string };
+    offer: {
+      eyebrow: string;
+      title: string;
+      text: string;
+      /** Récapitulatif factuel de la séance. */
+      facts: Fact[];
+      /** Ce qui se passe après l'envoi du formulaire, dans l'ordre. */
+      steps: string[];
+    };
     studio: {
       eyebrow: string;
       title: string;
@@ -166,7 +166,6 @@ export interface Studio {
     final: {
       title: string;
       text: string;
-      validity: string;
       /** Photo de la devanture, en grand sous l'appel final. null : aucune. */
       storefront: PhotoSlot | null;
       /** Quatre photos carrées, en grille 2 × 2 à côté de la devanture. */
@@ -208,14 +207,13 @@ export const studio: Studio = {
 
   phone: '+33243208733',
   phoneDisplay: '02 43 20 87 33',
-  // À retirer si le studio ne décroche pas systématiquement.
-  phoneNote: '',
+  phoneAlt: 'Tu préfères appeler ?',
 
-  cta: { label: 'Appeler le studio' },
+  cta: { label: 'Demander ma séance à {price}' },
 
   meta: {
-    title: 'nü form - Studio Pilates · Offre de rentrée',
-    description: 'Studio Pilates nü form au Mans : -15 % sur les abonnements Reformer et Hot Pilates, engagement 12 mois, welcome bag offert. Appelle le studio.',
+    title: 'nü form - Studio Pilates · Séance découverte à 15 €',
+    description: 'Studio Pilates nü form au Mans : ta première séance Reformer · Nü Sculpt à 15 €. Laisse ton numéro, le studio te rappelle pour choisir le créneau.',
     image: {
       file: 'boutique.jpg',
       subject: 'Devanture du studio',
@@ -224,7 +222,8 @@ export const studio: Studio = {
   },
 
   hero: {
-    title: 'La rentrée,\n**c’est aussi pour toi.**',
+    // Provisoire : à remplacer par l'accroche de l'annonce Meta dès qu'elle est fixée.
+    title: 'Découvre le *Pilates* Reformer,\n**au cœur du Mans.**',
     photo: {
       file: "studio7.jpeg",
       subject: 'Photo hero - visuel de campagne, plan rapproché, tenue orange',
@@ -233,56 +232,56 @@ export const studio: Studio = {
   },
 
   offer: {
-    discountPercent: 15,
-    discountLabel: 'sur tous nos abonnements',
-    commitment: 'Engagement sur 12 mois',
-    perks: ['Welcome bag offert', 'Sans frais d\u2019inscription'],
-    endDate: '2026-09-30',
-  
-    categories: [
-      {
-        id: 'reformer',
-        name: 'Reformer · Nü Sculpt',
-        plans: [
-          { id: 'ref-4',  name: '4 séances',  frequency: '1x par semaine', price: '84,15',  priceBefore: '99',  pricePerSession: '21,04' },
-          { id: 'ref-8',  name: '8 séances',  frequency: '2x par semaine', price: '153',    priceBefore: '180', pricePerSession: '19,13' },
-          { id: 'ref-12', name: '12 séances', frequency: '3x par semaine', price: '204',    priceBefore: '240', pricePerSession: '17' },
-          { id: 'ref-ill', name: 'Illimité',                               price: '254,15', priceBefore: '299' },
-        ],
-      },
-      {
-        id: 'hot',
-        name: 'Hot Pilates infrarouge',
-        plans: [
-          { id: 'hot-4',  name: '4 séances',  frequency: '1x par semaine', price: '58,65', priceBefore: '69',  pricePerSession: '14,66' },
-          { id: 'hot-8',  name: '8 séances',  frequency: '2x par semaine', price: '102',   priceBefore: '120', pricePerSession: '12,75' },
-          { id: 'hot-12', name: '12 séances', frequency: '3x par semaine', price: '136',   priceBefore: '160', pricePerSession: '11,33' },
-        ],
-      },
-    ],
-  
-    featuredLabel: 'Le plus choisi',
-    priceUnit: { short: '/ mois', long: 'par mois, engagement 12 mois' },
-    perSessionLabel: 'soit {price} € / séance',
-    conditions: [
-      'Remise de {discount} applicable sur un engagement de 12 mois.',
-      'Welcome bag offert à la signature.',
-      'Sans frais d\u2019inscription.',
-    ],
+    price: '15',
+    priceLabel: 'ta séance découverte',
+    perks: ['Reformer · Nü Sculpt', 'Réservée à une première visite'],
+  },
+
+  form: {
+    name: 'seance-decouverte',
+    title: 'Laisse ton numéro, on te rappelle',
+    text: 'Le studio te rappelle pour choisir le créneau de ta séance.',
+    firstNameLabel: 'Prénom',
+    phoneLabel: 'Téléphone',
+    phoneHint: 'Par exemple 06 12 34 56 78',
+    submit: 'Envoyer ma demande',
+    sending: 'Envoi en cours…',
+    privacy: 'Ton prénom et ton numéro servent uniquement à te recontacter pour cette séance.',
+    success: {
+      title: 'C’est noté !',
+      text: 'Le studio te rappelle pour choisir le créneau de ta séance découverte.',
+    },
+    error: 'L’envoi n’a pas fonctionné. Réessaie dans un instant, ou appelle directement le studio.',
+    // Référentiel CNIL « gestion commerciale » : 3 ans après le dernier contact
+    // pour un prospect. À valider avec le studio.
+    retention: '3 ans à compter de notre dernier échange',
   },
 
   reassurance: [
     // Nombre réel de reformers par cours. Ne jamais l'arrondir à la baisse.
     { text: '6 places par cours', mobile: true },
-    { text: 'Séances de 50 min', mobile: false },
-    { text: 'Coachs certifiées', mobile: false },
+    { text: 'Séances de 50 min', mobile: true },
+    { text: 'Coachs certifiées', mobile: true },
     { text: '7 j / 7', mobile: false },
   ],
 
   sections: {
     offer: {
-      eyebrow: 'L’offre de rentrée',
-      title: 'Les abonnements, remisés de {discount}',
+      eyebrow: 'La séance découverte',
+      title: 'Ta première séance, **à {price}**',
+      text: '',
+      facts: [
+        { label: 'Cours', value: 'Reformer · Nü Sculpt' },
+        { label: 'Durée', value: '50 min' },
+        { label: 'Groupe', value: '6 places par cours' },
+        { label: 'Pour qui', value: 'Première visite au studio' },
+        { label: 'Tarif', value: '{price}' },
+      ],
+      steps: [
+        'Tu laisses ton prénom et ton numéro.',
+        'Le studio te rappelle pour choisir le créneau.',
+        'Tu viens découvrir le reformer.',
+      ],
     },
     studio: {
       eyebrow: 'Le studio',
@@ -308,9 +307,8 @@ export const studio: Studio = {
       title: 'Qui va t’accompagner.',
     },
     final: {
-      title: 'On en parle\n**au téléphone ?**',
-      text: '',
-      validity: '((Offre valable jusqu’au {date}))',
+      title: 'Ta première séance,\n**on la cale ensemble ?**',
+      text: 'Laisse ton prénom et ton numéro : le studio te rappelle pour choisir le créneau.',
       storefront: {
         file: 'boutique.jpg',
         subject: 'Devanture du studio',

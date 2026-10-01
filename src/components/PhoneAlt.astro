@@ -1,0 +1,18 @@
+---
+import { studio } from '../config/studio';
+
+/**
+ * Le numéro du studio, en secondaire sous chaque appel à l'action.
+ * Le clic sur le lien tel: déclenche l'événement Contact, une fois par session (MetaPixel.astro).
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<p class:list={['phone-alt', className]}>
+  {studio.phoneAlt}{' '}
+  <a href={`tel:${studio.phone}`}>{studio.phoneDisplay}</a>
+</p>
