@@ -236,7 +236,7 @@ export const studio: Studio = {
 
   meta: {
     title: 'Nü Form - Studio Pilates · Séance découverte à 15 €',
-    description: 'Studio Pilates nü form au Mans : ta première séance Reformer · Nü Sculpt à 15 €. Laisse ton numéro, le studio te rappelle pour choisir le créneau.',
+    description: 'Studio Pilates nü form au Mans : ta première séance Reformer, Nü Sculpt ou Hot Pilates à 15 €. Laisse ton numéro, le studio te rappelle pour choisir le créneau.',
     image: {
       file: 'boutique.jpg',
       subject: 'Devanture du studio',
@@ -303,7 +303,7 @@ export const studio: Studio = {
       steps: [
         'Tu laisses ton prénom et ton numéro.',
         'Le studio te rappelle pour choisir le créneau.',
-        'Tu viens découvrir le reformer.',
+        'Tu viens découvrir le cours de ton choix.',
       ],
     },
     studio: {
@@ -416,7 +416,7 @@ export const studio: Studio = {
     },
     {
       question: 'Y a-t-il un engagement après la séance ?',
-      answer: 'Aucun : la séance découverte n’engage à rien. Elle sert à découvrir le Pilates Reformer à travers l’expérience nü form. Après le cours, on prend le temps de discuter de ton ressenti.',
+      answer: 'Aucun : la séance découverte n’engage à rien. Elle sert à découvrir le Pilates à travers l’expérience nü form. Après le cours, on prend le temps de discuter de ton ressenti.',
     },
     {
       question: 'À quels horaires sont les cours ?',
