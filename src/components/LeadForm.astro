@@ -42,10 +42,6 @@ const ATTRIBUTION = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 
       data-lead-form
     >
       <input type="hidden" name="form-name" value={form.name} />
-      <p class="sr-only" aria-hidden="true">
-        <label>Ne pas remplir <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
-      </p>
-      {ATTRIBUTION.map((name) => <input type="hidden" name={name} value="" />)}
 
       <div class="field">
         <label class="field__label" for={`${id}-prenom`}>{form.firstNameLabel}</label>
@@ -75,6 +71,13 @@ const ATTRIBUTION = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 
         />
         <p class="field__hint" id={`${id}-telephone-aide`}>{form.phoneHint}</p>
       </div>
+
+      {/* Après les champs visibles : Netlify (liste et email de notification)
+          affiche les champs dans l'ordre du HTML, prénom et téléphone d'abord. */}
+      {ATTRIBUTION.map((name) => <input type="hidden" name={name} value="" />)}
+      <p class="sr-only" aria-hidden="true">
+        <label>Ne pas remplir <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </p>
 
       <button class="btn leadform__submit" type="submit" data-sending={form.sending} data-lead-submit>{form.submit}</button>
 
