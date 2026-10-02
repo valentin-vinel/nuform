@@ -343,7 +343,7 @@ export const studio: Studio = {
       title: 'Qui va t’accompagner.',
     },
     final: {
-      title: 'Ta première séance,\n**on la cale ensemble ?**',
+      title: 'Cette première séance,\n**on la cale ensemble ?**',
       text: 'Laisse ton prénom et ton numéro : le studio te rappelle pour choisir le créneau.',
       storefront: {
         file: 'boutique.jpg',

@@ -965,7 +965,7 @@ html:has(.lightbox[open]) { overflow: hidden; }
 }
 
 .final__inner { display: grid; gap: 1.75rem; }
-.final__title { font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.25rem); }
+.final__title { font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.25rem); text-transform: none; }
 .final__text { max-width: 44ch; margin: 1rem auto 0; font-size: 0.9375rem; }
 .final__body { display: grid; gap: 2.5rem; }
 .final__form { box-shadow: 0 1rem 2.5rem color-mix(in oklab, var(--c-deep) 25%, transparent); }
