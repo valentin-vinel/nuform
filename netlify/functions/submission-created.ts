@@ -34,7 +34,10 @@ interface Submission {
 
 export const handler = async (event: { body: string | null }) => {
   const { payload } = JSON.parse(event.body ?? '{}') as { payload?: Submission };
-  if (payload?.form_name !== studio.form.name) return { statusCode: 200 };
+  if (payload?.form_name !== studio.form.name) {
+    console.log(`Formulaire « ${payload?.form_name} » ignoré : seul « ${studio.form.name} » est copié dans Google Sheets.`);
+    return { statusCode: 200 };
+  }
 
   const url = process.env.SHEETS_WEBHOOK_URL;
   const secret = process.env.SHEETS_WEBHOOK_SECRET;
@@ -55,6 +58,8 @@ export const handler = async (event: { body: string | null }) => {
     const text = await response.text();
     if (!response.ok || text !== 'ok') {
       console.error(`Google Sheets a refusé la demande ${payload.id} : ${response.status} ${text.slice(0, 200)}`);
+    } else {
+      console.log(`Demande ${payload.id} copiée dans Google Sheets.`);
     }
   } catch (error) {
     console.error(`Google Sheets injoignable pour la demande ${payload.id} :`, error);
