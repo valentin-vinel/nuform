@@ -1,0 +1,25 @@
+---
+import { studio } from '../config/studio';
+import { fill, titleHtml } from '../lib/text';
+
+const { eyebrow, title, text, steps } = studio.sections.session;
+---
+
+{steps.length > 0 && (
+  <section class="section" aria-labelledby="deroule-titre">
+    <div class="wrap">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="title" id="deroule-titre" set:html={titleHtml(title)} />
+      {text && <p class="lead">{text}</p>}
+
+      <ol class="session__steps">
+        {steps.map((step) => (
+          <li class="card session__step">
+            <h3 class="session__title">{fill(step.title)}</h3>
+            <p class="session__text">{fill(step.text)}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+)}

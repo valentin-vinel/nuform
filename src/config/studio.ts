@@ -32,6 +32,18 @@ export interface Fact {
   value: string;
 }
 
+/** Une étape du déroulé de la séance découverte. */
+export interface SessionStep {
+  title: string;
+  text: string;
+}
+
+/** Une question de la FAQ. Réponse factuelle, vérifiée auprès du studio. */
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface Review {
   text: string;
   /** Prénom et initiale. */
@@ -161,7 +173,15 @@ export interface Studio {
       swipeHint: string;
       photos: PhotoSlot[];
     };
+    /** Déroulé de la séance découverte sur place, dans l'ordre. Vide : section masquée. */
+    session: {
+      eyebrow: string;
+      title: string;
+      text: string;
+      steps: SessionStep[];
+    };
     reviews: { eyebrow: string; title: string };
+    faq: { eyebrow: string; title: string };
     team: { eyebrow: string; title: string };
     final: {
       title: string;
@@ -174,6 +194,9 @@ export interface Studio {
   };
 
   reviews: Review[];
+
+  /** Vide : la FAQ n'est pas affichée. */
+  faq: FaqItem[];
 
   /** Note relevée sur la fiche Google. null pour masquer. Jamais recopiée de mémoire. */
   googleReview: { rating: number | null; count: number | null } | null;
@@ -259,7 +282,7 @@ export const studio: Studio = {
 
   reassurance: [
     // Nombre réel de reformers par cours. Ne jamais l'arrondir à la baisse.
-    { text: '6 places par cours', mobile: true },
+    { text: '8 places par cours', mobile: true },
     { text: 'Séances de 50 min', mobile: true },
     { text: 'Coachs certifiées', mobile: true },
     { text: '7 j / 7', mobile: false },
@@ -273,7 +296,7 @@ export const studio: Studio = {
       facts: [
         { label: 'Cours', value: 'Reformer · Nü Sculpt' },
         { label: 'Durée', value: '50 min' },
-        { label: 'Groupe', value: '6 places par cours' },
+        { label: 'Groupe', value: '8 places par cours' },
         { label: 'Pour qui', value: 'Première visite au studio' },
         { label: 'Tarif', value: '{price}' },
       ],
@@ -298,9 +321,22 @@ export const studio: Studio = {
 
       ],
     },
+    session: {
+      eyebrow: 'Le jour J',
+      title: 'Comment se passe *ta* séance',
+      text: '',
+      // Le déroulé réel, validé par le studio. Jamais reconstitué de mémoire.
+      // Vide : section masquée. Une entrée par étape, dans l'ordre :
+      // { title: 'Accueil', text: 'Ce qui se passe, en une ou deux phrases.' },
+      steps: [],
+    },
     reviews: {
       eyebrow: 'Elles y sont déjà',
       title: "Ce qu'en pensent nos clientes",
+    },
+    faq: {
+      eyebrow: 'Questions fréquentes',
+      title: 'Avant ta *première* séance',
     },
     team: {
       eyebrow: 'L’équipe',
@@ -366,6 +402,33 @@ export const studio: Studio = {
       source: 'Google',
       date: 'Août 2026',
       rating: 5,
+    },
+  ],
+
+  // Uniquement des réponses vérifiées auprès du studio. Une réponse entre
+  // crochets s'affiche telle quelle et déclenche un avertissement au build.
+  // Pas de doublon avec le reste de la page (prix, durée, groupe, réservation,
+  // données personnelles y sont déjà).
+  faq: [
+    {
+      question: 'Je n’ai jamais fait de Pilates, est-ce pour moi ?',
+      answer: 'Oui, bien sûr : la séance découverte est ouverte aux débutantes. La coach s’adapte et prend en compte le niveau de chacune.',
+    },
+    {
+      question: 'Y a-t-il un engagement après la séance ?',
+      answer: 'Aucun : la séance découverte n’engage à rien. Elle sert à découvrir le Pilates Reformer à travers l’expérience nü form. Après le cours, on prend le temps de discuter de ton ressenti.',
+    },
+    {
+      question: 'À quels horaires sont les cours ?',
+      answer: 'Des cours sont proposés le matin, en journée et en soirée, pour s’adapter à tous les rythmes.',
+    },
+    {
+      question: 'Où se trouve le studio ? Où se garer ?',
+      answer: '11 place Aristide Briand, en hyper-centre du Mans. Plusieurs parkings payants se trouvent juste en face et à proximité, ainsi que des places en voirie aux alentours.',
+    },
+    {
+      question: 'Y a-t-il des vestiaires et des douches ?',
+      answer: 'Oui, le studio a des vestiaires et des douches.',
     },
   ],
 

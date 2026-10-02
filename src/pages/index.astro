@@ -5,7 +5,9 @@ import Hero from '../components/Hero.astro';
 import Reassurance from '../components/Reassurance.astro';
 import Discovery from '../components/Discovery.astro';
 import StudioSection from '../components/StudioSection.astro';
+import SessionSteps from '../components/SessionSteps.astro';
 import Reviews from '../components/Reviews.astro';
+import Faq from '../components/Faq.astro';
 import Team from '../components/Team.astro';
 import FinalCta from '../components/FinalCta.astro';
 import Footer from '../components/Footer.astro';
@@ -15,6 +17,9 @@ import StickyCta from '../components/StickyCta.astro';
 if (studio.reviews.some((review) => review.placeholder)) {
   console.warn('\n⚠  Des avis d’exemple (placeholder: true) sont encore affichés.\n');
 }
+if (studio.faq.some((item) => /\[.*\]/.test(item.answer))) {
+  console.warn('\n⚠  Des réponses de la FAQ sont encore entre crochets : à faire valider par le studio.\n');
+}
 ---
 
 <Landing title={studio.meta.title} description={studio.meta.description} noindex>
@@ -23,8 +28,10 @@ if (studio.reviews.some((review) => review.placeholder)) {
     <Reassurance />
     <Discovery />
     <StudioSection />
+    <SessionSteps />
     <Reviews />
     <!-- <Team /> -->
+    <Faq />
     <FinalCta />
   </main>
   <Footer />

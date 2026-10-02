@@ -1,0 +1,25 @@
+---
+import { studio } from '../config/studio';
+import { fill, titleHtml } from '../lib/text';
+
+const { eyebrow, title } = studio.sections.faq;
+const { faq } = studio;
+---
+
+{faq.length > 0 && (
+  <section class="section section--soft" aria-labelledby="faq-titre">
+    <div class="wrap">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="title" id="faq-titre" set:html={titleHtml(title)} />
+
+      <div class="faq__list">
+        {faq.map((item) => (
+          <details class="faq__item">
+            <summary class="faq__question">{fill(item.question)}</summary>
+            <p class="faq__answer">{fill(item.answer)}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
