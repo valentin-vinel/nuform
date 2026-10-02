@@ -276,7 +276,7 @@ export const studio: Studio = {
     },
     error: 'L’envoi n’a pas fonctionné. Réessaie dans un instant, ou appelle directement le studio.',
     // Référentiel CNIL « gestion commerciale » : 3 ans après le dernier contact
-    // pour un prospect. À valider avec le studio.
+    // pour un prospect. Validé avec le studio en octobre 2026.
     retention: '3 ans à compter de notre dernier échange',
   },
 
