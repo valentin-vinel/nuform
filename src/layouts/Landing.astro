@@ -78,7 +78,7 @@ const rootVars = `:root{
     <script>
       // Capture des identifiants de campagne à l'arrivée.
       // Aucune donnée personnelle : uniquement des identifiants techniques.
-      const KEYS = ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      const KEYS = ['fbclid', 'utm_source', 'utm_campaign', 'utm_content'];
       try {
         const params = new URLSearchParams(window.location.search);
         for (const key of KEYS) {

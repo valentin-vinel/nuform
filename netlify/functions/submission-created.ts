@@ -19,10 +19,8 @@ const FIELDS = [
   'prenom',
   'telephone',
   'utm_source',
-  'utm_medium',
   'utm_campaign',
   'utm_content',
-  'utm_term',
   'fbclid',
   'event_id',
 ] as const;

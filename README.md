@@ -68,3 +68,13 @@ Pixel Meta après consentement uniquement (`PUBLIC_PIXEL_ID`, voir `.env.example
 Événements, une fois par session chacun : `Contact` au clic sur le numéro,
 `Lead` après l'envoi réussi d'une demande. L'eventID de `Lead` est aussi dans
 le Google Sheet, pour une future déduplication CAPI.
+
+Paramètres d'URL à renseigner sur chaque annonce Meta (niveau annonce) :
+
+```
+utm_source={{site_source_name}}&utm_campaign={{campaign.name}}&utm_content={{ad.name}}
+```
+
+Ils arrivent dans le Google Sheet avec chaque demande, consentement ou non :
+c'est ce qui dit quelle annonce amène des demandes. Nommer les annonces de
+façon lisible, c'est ce nom qui apparaît dans `utm_content`.
