@@ -336,14 +336,14 @@ export const studio: Studio = {
     },
     faq: {
       eyebrow: 'Questions fréquentes',
-      title: 'Avant ta *première* séance',
+      title: 'Avant ta première séance',
     },
     team: {
       eyebrow: 'L’équipe',
       title: 'Qui va t’accompagner.',
     },
     final: {
-      title: 'Cette première séance,\n**on la cale ensemble ?**',
+      title: 'Cette première séance,\n**on la planifie ensemble ?**',
       text: 'Laisse ton prénom et ton numéro : le studio te rappelle pour choisir le créneau.',
       storefront: {
         file: 'boutique.jpg',
