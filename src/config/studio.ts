@@ -246,7 +246,7 @@ export const studio: Studio = {
 
   hero: {
     // Provisoire : à remplacer par l'accroche de l'annonce Meta dès qu'elle est fixée.
-    title: 'Découvre le Pilates Reformer,\n**au cœur du Mans.**',
+    title: 'Découvre le Pilates,\n**au cœur du Mans.**',
     photo: {
       file: "studio7.jpeg",
       subject: 'Photo hero - visuel de campagne, plan rapproché, tenue orange',
@@ -257,7 +257,7 @@ export const studio: Studio = {
   offer: {
     price: '15',
     priceLabel: 'ta séance découverte',
-    perks: ['Reformer · Nü Sculpt', 'Réservée à une première visite'],
+    perks: ['Reformer · Nü Sculpt · Hot Pilates', 'Réservée à une première visite'],
   },
 
   form: {
@@ -294,9 +294,9 @@ export const studio: Studio = {
       title: 'Ta première séance, **à {price}**',
       text: '',
       facts: [
-        { label: 'Cours', value: 'Reformer · Nü Sculpt' },
+        { label: 'Cours', value: 'Reformer · Nü Sculpt · Hot Pilates' },
         { label: 'Durée', value: '50 min' },
-        { label: 'Groupe', value: '8 places par cours' },
+        { label: 'Groupe', value: "8 places par cours" },
         { label: 'Pour qui', value: 'Première visite au studio' },
         { label: 'Tarif', value: '{price}' },
       ],
